@@ -13,17 +13,45 @@ export default function AppTabs() {
       indicatorColor={colors.backgroundElement}
       labelStyle={{ selected: { color: colors.text } }}>
       <NativeTabs.Trigger name="index">
-        <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Label>Sessions</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
-          src={require('@/assets/images/tabIcons/home.png')}
+          src={{
+            default: require('@/assets/images/tabIcons/home.png'),
+            selected: require('@/assets/images/tabIcons/home-solid.png'),
+          }}
           renderingMode="template"
         />
       </NativeTabs.Trigger>
 
-      <NativeTabs.Trigger name="explore">
-        <NativeTabs.Trigger.Label>Explore</NativeTabs.Trigger.Label>
+      <NativeTabs.Trigger name="my-sessions">
+        <NativeTabs.Trigger.Label>My Sessions</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
-          src={require('@/assets/images/tabIcons/explore.png')}
+          src={{
+            default: require('@/assets/images/tabIcons/calendar-days.png'),
+            selected: require('@/assets/images/tabIcons/calendar-days-solid.png'),
+          }}
+          renderingMode="template"
+        />
+      </NativeTabs.Trigger>
+
+      <NativeTabs.Trigger name="create">
+        <NativeTabs.Trigger.Label>Create</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon
+          src={{
+            default: require('@/assets/images/tabIcons/plus-circle.png'),
+            selected: require('@/assets/images/tabIcons/plus-circle-solid.png'),
+          }}
+          renderingMode="template"
+        />
+      </NativeTabs.Trigger>
+
+      <NativeTabs.Trigger name="profile">
+        <NativeTabs.Trigger.Label>Profile</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon
+          src={{
+            default: require('@/assets/images/tabIcons/user-circle.png'),
+            selected: require('@/assets/images/tabIcons/user-circle-solid.png'),
+          }}
           renderingMode="template"
         />
       </NativeTabs.Trigger>
