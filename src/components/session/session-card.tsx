@@ -10,14 +10,15 @@ import type { Session } from '@/types/session';
 
 export type SessionCardProps = {
   session: Session;
+  detailPathname?: '/session/[id]' | '/my-sessions/session/[id]';
 };
 
 // Session card, tap to open the session
-export function SessionCard({ session }: SessionCardProps) {
+export function SessionCard({ session, detailPathname = '/session/[id]' }: SessionCardProps) {
   const theme = useTheme();
 
   return (
-    <Link href={{ pathname: '/session/[id]', params: { id: session.id } }} asChild>
+    <Link href={{ pathname: detailPathname, params: { id: session.id } }} asChild>
       <Pressable
         role="link"
         accessibilityLabel={`${session.title}, view details`}

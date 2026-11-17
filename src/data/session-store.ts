@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSyncExternalStore } from 'react';
 
 import { CURRENT_USER } from '@/data/people';
@@ -5,7 +6,9 @@ import { SAMPLE_SESSIONS } from '@/data/sessions';
 import type { Session } from '@/types/session';
 
 // Sessions shared by every screen, from SAMPLE_SESSIONS.
-// Only joined sessions can change for now. Kept in memory so it resets on restart
+// Joined session ids are saved in AsyncStorage so they stay after closing the app
+
+const STORAGE_KEY = 'beta-app/joined-session-ids';
 
 type State = {
   joinedIds: Set<string>;
@@ -24,6 +27,7 @@ function buildState(joinedIds: Set<string>): State {
 }
 
 let state = buildState(new Set());
+let hydrated = false;
 const listeners = new Set<() => void>();
 
 function emit() {
@@ -38,6 +42,35 @@ function subscribe(listener: () => void) {
 function setJoinedIds(joinedIds: Set<string>) {
   state = buildState(joinedIds);
   emit();
+  AsyncStorage.setItem(STORAGE_KEY, JSON.stringify([...joinedIds])).catch((error) =>
+    console.warn('Could not save joined sessions', error)
+  );
+}
+
+let hydratePromise: Promise<void> | undefined;
+export function hydrateSessionStore() {
+  if (hydratePromise) return hydratePromise;
+  hydratePromise = AsyncStorage.getItem(STORAGE_KEY)
+    .then((raw) => {
+      const ids = raw ? (JSON.parse(raw) as unknown) : [];
+      if (Array.isArray(ids)) {
+        state = buildState(new Set(ids.filter((id) => typeof id === 'string')));
+      }
+    })
+    .catch((error) => console.warn('Could not load joined sessions', error))
+    .finally(() => {
+      hydrated = true;
+      emit();
+    });
+  return hydratePromise;
+}
+
+export function useSessionStoreReady() {
+  return useSyncExternalStore(
+    subscribe,
+    () => hydrated,
+    () => false
+  );
 }
 
 export function useSessions() {
@@ -66,4 +99,13 @@ export function leaveSession(id: string) {
   const next = new Set(state.joinedIds);
   next.delete(id);
   setJoinedIds(next);
+}
+
+// Sessions for each My Sessions tab
+export function useMySessions(now = new Date()) {
+  const sessions = useSessions();
+  const going = sessions.filter((s) => isAttending(s) && s.endsAt >= now);
+  const history = sessions.filter((s) => isAttending(s) && s.endsAt < now);
+  const created = sessions.filter((s) => s.creator.id === CURRENT_USER.id);
+  return { going, created, history };
 }

@@ -10,6 +10,7 @@ import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 
 import AppTabs from '@/components/layout/app-tabs';
+import { hydrateSessionStore, useSessionStoreReady } from '@/data/session-store';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -20,7 +21,12 @@ export default function TabLayout() {
     InstrumentSans_600SemiBold,
     InstrumentSans_700Bold,
   });
-  const ready = fontsLoaded || !!fontError;
+  const storeReady = useSessionStoreReady();
+  const ready = (fontsLoaded || !!fontError) && storeReady;
+
+  useEffect(() => {
+    hydrateSessionStore();
+  }, []);
 
   useEffect(() => {
     if (ready) {

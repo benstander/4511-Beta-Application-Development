@@ -1,0 +1,68 @@
+import { router } from 'expo-router';
+import { useState } from 'react';
+import { ScrollView, StyleSheet } from 'react-native';
+
+import { Page } from '@/components/layout/page';
+import { SessionCard } from '@/components/session/session-card';
+import { CategoryTabs } from '@/components/ui/category-tabs';
+import { EmptyState } from '@/components/ui/empty-state';
+import { useMySessions } from '@/data/session-store';
+
+const TABS = ['Going', 'Created', 'History'] as const;
+type Tab = (typeof TABS)[number];
+
+const EMPTY: Record<Tab, { message: string; actionLabel: string; href: '/' | '/create' }> = {
+  Going: { message: 'Have not joined a session yet.', actionLabel: 'Find a session', href: '/' },
+  Created: {
+    message: 'Have not created a session yet.',
+    actionLabel: 'Create a session',
+    href: '/create',
+  },
+  History: { message: 'No past sessions yet.', actionLabel: 'Find a session', href: '/' },
+};
+
+export default function MySessionsScreen() {
+  const [tab, setTab] = useState<Tab>('Going');
+  const mySessions = useMySessions();
+
+  const sessions = { Going: mySessions.going, Created: mySessions.created, History: mySessions.history }[
+    tab
+  ];
+  const empty = EMPTY[tab];
+
+  return (
+    <Page title="My Sessions">
+      <CategoryTabs categories={TABS} selected={tab} onSelect={setTab} />
+      {sessions.length === 0 ? (
+        <EmptyState
+          message={empty.message}
+          actionLabel={empty.actionLabel}
+          onAction={() => router.navigate(empty.href)}
+        />
+      ) : (
+        <ScrollView
+          style={styles.list}
+          contentContainerStyle={styles.listContent}
+          showsVerticalScrollIndicator={false}>
+          {sessions.map((session) => (
+            <SessionCard
+              key={session.id}
+              session={session}
+              detailPathname="/my-sessions/session/[id]"
+            />
+          ))}
+        </ScrollView>
+      )}
+    </Page>
+  );
+}
+
+const styles = StyleSheet.create({
+  list: {
+    flex: 1,
+  },
+  listContent: {
+    gap: 24,
+    paddingTop: 4,
+  },
+});
