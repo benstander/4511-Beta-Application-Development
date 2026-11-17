@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 
@@ -21,8 +21,18 @@ const EMPTY: Record<Tab, { message: string; actionLabel: string; href: '/' | '/c
   History: { message: 'No past sessions yet.', actionLabel: 'Find a session', href: '/' },
 };
 
+function isTab(value: unknown): value is Tab {
+  return TABS.includes(value as Tab);
+}
+
 export default function MySessionsScreen() {
-  const [tab, setTab] = useState<Tab>('Going');
+  const { tab: tabParam } = useLocalSearchParams<{ tab?: string }>();
+  const [tab, setTab] = useState<Tab>(isTab(tabParam) ? tabParam : 'Going');
+  const [lastTabParam, setLastTabParam] = useState(tabParam);
+  if (tabParam !== lastTabParam) {
+    setLastTabParam(tabParam);
+    if (isTab(tabParam)) setTab(tabParam);
+  }
   const mySessions = useMySessions();
 
   const sessions = { Going: mySessions.going, Created: mySessions.created, History: mySessions.history }[

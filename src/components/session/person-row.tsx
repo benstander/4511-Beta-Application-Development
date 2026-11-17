@@ -1,22 +1,40 @@
 import { Image } from 'expo-image';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { FontFamily } from '@/constants/theme';
 import { CURRENT_USER } from '@/data/people';
 import { useTheme } from '@/hooks/use-theme';
 import type { Person } from '@/types/session';
 
-type PersonRowProps = {
-  person: Person;
+// Icon on the right: going = tick, invited = clock, add = plus
+export type PersonStatus = 'going' | 'invited' | 'add';
+
+const STATUS_ICONS: Record<PersonStatus, number> = {
+  going: require('@/assets/icons/check-circle.svg'),
+  invited: require('@/assets/icons/clock-24.svg'),
+  add: require('@/assets/icons/plus-circle.svg'),
 };
 
-// Row with avatar, name and a tick
-export function PersonRow({ person }: PersonRowProps) {
+const STATUS_LABELS: Record<PersonStatus, string> = {
+  going: 'going',
+  invited: 'invited',
+  add: 'not invited',
+};
+
+type PersonRowProps = {
+  person: Person;
+  status?: PersonStatus;
+  onPress?: () => void;
+  actionLabel?: string;
+};
+
+// Row with avatar, name and a status icon
+export function PersonRow({ person, status = 'going', onPress, actionLabel }: PersonRowProps) {
   const theme = useTheme();
   const name = person.id === CURRENT_USER.id ? `${person.name} (you)` : person.name;
 
-  return (
-    <View style={[styles.row, { borderColor: theme.text }]}>
+  const content = (
+    <>
       <View style={styles.identity}>
         <Image
           source={require('@/assets/icons/user-circle-24.svg')}
@@ -27,25 +45,50 @@ export function PersonRow({ person }: PersonRowProps) {
           {name}
         </Text>
       </View>
-      <Image
-        source={require('@/assets/icons/check-circle.svg')}
-        style={styles.icon}
-        tintColor={theme.text}
-      />
+      <Image source={STATUS_ICONS[status]} style={styles.icon} tintColor={theme.text} />
+    </>
+  );
+
+  if (onPress) {
+    return (
+      <Pressable
+        onPress={onPress}
+        role="button"
+        accessibilityLabel={actionLabel ?? `${name}, ${STATUS_LABELS[status]}`}
+        style={({ pressed }) => [
+          styles.row,
+          { borderColor: theme.text },
+          pressed && styles.pressed,
+        ]}>
+        {content}
+      </Pressable>
+    );
+  }
+
+  return (
+    <View
+      style={[styles.row, { borderColor: theme.text }]}
+      accessible
+      accessibilityLabel={`${name}, ${STATUS_LABELS[status]}`}>
+      {content}
     </View>
   );
 }
 
 type PersonListProps = {
   people: Person[];
+  invited?: Person[];
 };
 
 // List of PersonRows
-export function PersonList({ people }: PersonListProps) {
+export function PersonList({ people, invited = [] }: PersonListProps) {
   return (
     <View style={styles.list}>
       {people.map((person) => (
         <PersonRow key={person.id} person={person} />
+      ))}
+      {invited.map((person) => (
+        <PersonRow key={person.id} person={person} status="invited" />
       ))}
     </View>
   );
@@ -64,6 +107,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: 8,
+  },
+  pressed: {
+    opacity: 0.6,
   },
   identity: {
     flexDirection: 'row',

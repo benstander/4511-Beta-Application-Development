@@ -15,6 +15,10 @@ export const SPORTS = [
 
 export type Sport = (typeof SPORTS)[number];
 
+export const SESSION_TYPES = ['Public', 'Solo', 'Invite-only', 'Friends-only'] as const;
+
+export type SessionType = (typeof SESSION_TYPES)[number];
+
 export type Person = {
   id: string;
   name: string;
@@ -32,5 +36,7 @@ export type Session = {
   description: string;
   creator: Person;
   attendees: Person[];
+  invited?: Person[];
+  type?: SessionType;
   attendeeSummary: string;
 };

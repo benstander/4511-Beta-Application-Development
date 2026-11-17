@@ -1,4 +1,4 @@
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,7 +10,14 @@ import { DetailSection } from '@/components/session/detail-section';
 import { PersonList, PersonRow } from '@/components/session/person-row';
 import { SessionHeader } from '@/components/session/session-header';
 import { FontFamily, MaxContentWidth, ScreenPadding } from '@/constants/theme';
-import { isAttending, joinSession, leaveSession, useSession } from '@/data/session-store';
+import {
+  deleteSession,
+  isAttending,
+  isCreator,
+  joinSession,
+  leaveSession,
+  useSession,
+} from '@/data/session-store';
 import { useBottomTabInset } from '@/hooks/use-bottom-tab-inset';
 import { useTheme } from '@/hooks/use-theme';
 
@@ -20,6 +27,7 @@ export default function SessionDetailScreen() {
   const theme = useTheme();
   const bottomTabInset = useBottomTabInset();
   const [confirmingLeave, setConfirmingLeave] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   if (!session) {
     return (
@@ -35,6 +43,7 @@ export default function SessionDetailScreen() {
   }
 
   const going = isAttending(session);
+  const mine = isCreator(session);
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
@@ -60,15 +69,23 @@ export default function SessionDetailScreen() {
             </DetailSection>
 
             <DetailSection title="Attendee list">
-              <PersonList people={session.attendees} />
+              <PersonList people={session.attendees} invited={session.invited} />
             </DetailSection>
 
-            {going && (
+            {mine ? (
               <Button
-                label="Leave session"
+                label="Delete session"
                 variant="destructiveText"
-                onPress={() => setConfirmingLeave(true)}
+                onPress={() => setConfirmingDelete(true)}
               />
+            ) : (
+              going && (
+                <Button
+                  label="Leave session"
+                  variant="destructiveText"
+                  onPress={() => setConfirmingLeave(true)}
+                />
+              )
             )}
           </View>
         </ScrollView>
@@ -92,6 +109,21 @@ export default function SessionDetailScreen() {
         onConfirm={() => {
           leaveSession(session.id);
           setConfirmingLeave(false);
+        }}
+      />
+
+      <ConfirmSheet
+        visible={confirmingDelete}
+        title="Do you want to delete this session?"
+        message="It will be removed for you and everyone you invited. This can't be undone."
+        confirmLabel="Delete session"
+        tone="destructive"
+        onCancel={() => setConfirmingDelete(false)}
+        onConfirm={() => {
+          setConfirmingDelete(false);
+          router.back();
+          // Wait for the page to close first so it doesn't flash "doesn't exist"
+          setTimeout(() => deleteSession(session.id), 400);
         }}
       />
     </View>

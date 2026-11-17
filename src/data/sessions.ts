@@ -1,5 +1,5 @@
 import { PEOPLE } from '@/data/people';
-import { SPORTS, type Session } from '@/types/session';
+import { SPORTS, type Session, type Sport } from '@/types/session';
 
 // Fake sessions for now. The first 3 are from the home screen design
 
@@ -16,6 +16,17 @@ const IMAGES = {
   swimming: require('@/assets/images/sessions/swimming.jpg'),
   cycling: require('@/assets/images/sessions/cycling.jpg'),
   climbing: require('@/assets/images/sessions/climbing.jpg'),
+};
+
+export const SPORT_IMAGES: Record<Sport, number> = {
+  Gym: IMAGES.gym,
+  Running: IMAGES.running,
+  Soccer: IMAGES.soccer,
+  Basketball: IMAGES.basketball,
+  Tennis: IMAGES.tennis,
+  Swimming: IMAGES.swimming,
+  Cycling: IMAGES.cycling,
+  Climbing: IMAGES.climbing,
 };
 
 export const SAMPLE_SESSIONS: Session[] = [

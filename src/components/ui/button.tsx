@@ -4,13 +4,15 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { FontFamily, Palette } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
-type ButtonVariant = 'primary' | 'secondary' | 'destructive' | 'destructiveText';
+type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'destructive' | 'destructiveText';
 
 type ButtonProps = {
   label: string;
   variant?: ButtonVariant;
   size?: 'large' | 'medium';
   icon?: ImageSource | number;
+  iconPosition?: 'leading' | 'trailing';
+  disabled?: boolean;
   onPress?: () => void;
   flex?: boolean;
 };
@@ -20,31 +22,39 @@ export function Button({
   variant = 'primary',
   size = 'large',
   icon,
+  iconPosition = 'trailing',
+  disabled,
   onPress,
   flex,
 }: ButtonProps) {
   const theme = useTheme();
 
   const container = {
-    primary: { backgroundColor: Palette.primary },
+    primary: { backgroundColor: disabled ? theme.buttonDisabled : Palette.primary },
     secondary: {
       backgroundColor: theme.buttonSecondary,
       borderColor: theme.buttonSecondaryBorder,
       borderWidth: 1.5,
     },
+    outline: { borderColor: theme.text, borderWidth: 1.5 },
     destructive: { backgroundColor: Palette.destructive },
     destructiveText: { height: 44 },
   }[variant];
 
   const textColor = {
-    primary: Palette.onColor,
+    primary: disabled ? theme.textDisabled : Palette.onColor,
     secondary: theme.text,
+    outline: theme.text,
     destructive: Palette.onColor,
     destructiveText: Palette.destructive,
   }[variant];
 
+  const iconImage =
+    icon != null ? <Image source={icon} style={styles.icon} tintColor={textColor} /> : null;
+
   const content = (
     <>
+      {iconPosition === 'leading' && iconImage}
       <Text
         style={[
           styles.label,
@@ -54,7 +64,7 @@ export function Button({
         ]}>
         {label}
       </Text>
-      {icon != null && <Image source={icon} style={styles.icon} tintColor={textColor} />}
+      {iconPosition === 'trailing' && iconImage}
     </>
   );
 
@@ -71,6 +81,8 @@ export function Button({
   return (
     <Pressable
       onPress={onPress}
+      disabled={disabled}
+      aria-disabled={disabled}
       role="button"
       style={({ pressed }) => [baseStyle, pressed && styles.pressed]}>
       {content}

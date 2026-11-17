@@ -15,6 +15,8 @@ export const Colors = {
     iconButtonBorder: '#E5E5E5',
     buttonSecondary: '#EFEFEF',
     buttonSecondaryBorder: '#D7D7D7',
+    buttonDisabled: '#E5E5E5',
+    textDisabled: '#A3A3A3',
     surface: '#FFFFFF',
   },
   dark: {
@@ -29,6 +31,8 @@ export const Colors = {
     iconButtonBorder: '#2E3135',
     buttonSecondary: '#2E3135',
     buttonSecondaryBorder: '#3A3D42',
+    buttonDisabled: '#2E3135',
+    textDisabled: '#6B6F76',
     surface: '#1C1C1E',
   },
 } as const;
