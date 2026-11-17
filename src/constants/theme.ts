@@ -1,9 +1,4 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://unistyl.es/), etc.
- */
-
-import '@/global.css';
+// Colours, fonts and spacing. Use useTheme() to get the right colours
 
 import { Platform } from 'react-native';
 
@@ -14,6 +9,13 @@ export const Colors = {
     backgroundElement: '#F0F0F3',
     backgroundSelected: '#E0E1E6',
     textSecondary: '#60646C',
+    textMuted: '#4B4B4B',
+    border: '#E4E4E4',
+    iconButton: '#F5F5F5',
+    iconButtonBorder: '#E5E5E5',
+    buttonSecondary: '#EFEFEF',
+    buttonSecondaryBorder: '#D7D7D7',
+    surface: '#FFFFFF',
   },
   dark: {
     text: '#ffffff',
@@ -21,35 +23,36 @@ export const Colors = {
     backgroundElement: '#212225',
     backgroundSelected: '#2E3135',
     textSecondary: '#B0B4BA',
+    textMuted: '#B0B4BA',
+    border: '#2E3135',
+    iconButton: '#212225',
+    iconButtonBorder: '#2E3135',
+    buttonSecondary: '#2E3135',
+    buttonSecondaryBorder: '#3A3D42',
+    surface: '#1C1C1E',
   },
 } as const;
 
-export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
+export const Palette = {
+  primary: '#0051FF',
+  destructive: '#D10000',
+  onColor: '#FFFFFF',
+  overlay: 'rgba(0, 0, 0, 0.4)',
+} as const;
 
-export const Fonts = Platform.select({
-  ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
-    sans: 'system-ui',
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
-    serif: 'ui-serif',
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
-    rounded: 'ui-rounded',
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
-    mono: 'ui-monospace',
-  },
-  default: {
-    sans: 'normal',
-    serif: 'serif',
-    rounded: 'normal',
-    mono: 'monospace',
-  },
-  web: {
-    sans: 'var(--font-display)',
-    serif: 'var(--font-serif)',
-    rounded: 'var(--font-rounded)',
-    mono: 'var(--font-mono)',
-  },
-});
+export const FontFamily = {
+  medium: 'InstrumentSans_500Medium',
+  semiBold: 'InstrumentSans_600SemiBold',
+  bold: 'InstrumentSans_700Bold',
+} as const;
+
+export const SessionLevelColors = {
+  social: '#169300',
+  competitive: '#D10000',
+  beginner: '#0051FF',
+} as const;
+
+export type SessionLevel = keyof typeof SessionLevelColors;
 
 export const Spacing = {
   half: 2,
@@ -61,7 +64,7 @@ export const Spacing = {
   six: 64,
 } as const;
 
-export const ScreenPadding = 20;
+export const ScreenPadding = 16;
 
-export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
+export const TabBarHeight = Platform.select({ android: 80 }) ?? 0;
 export const MaxContentWidth = 800;

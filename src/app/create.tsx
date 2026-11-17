@@ -1,4 +1,4 @@
-import { Page } from '@/components/page';
+import { Page } from '@/components/layout/page';
 
 export default function CreateScreen() {
   return <Page title="Create" />;
