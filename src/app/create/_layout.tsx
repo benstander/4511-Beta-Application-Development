@@ -1,6 +1,5 @@
 import { Stack } from 'expo-router';
 
-// Stack for the create steps
 export default function CreateLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>

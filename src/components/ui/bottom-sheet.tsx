@@ -49,6 +49,7 @@ export function BottomSheet({
 
   useEffect(() => {
     if (visible) {
+      // Reset the drag then slide up
       drag.setValue(0);
       Animated.timing(progress, {
         toValue: 1,
@@ -57,6 +58,7 @@ export function BottomSheet({
         useNativeDriver: USE_NATIVE_DRIVER,
       }).start();
     } else {
+      // Slide down then hide the Modal
       Animated.timing(progress, {
         toValue: 0,
         duration: 220,
@@ -71,6 +73,7 @@ export function BottomSheet({
   const panResponder = useMemo(
     () =>
       PanResponder.create({
+        // Only react to downward swipes so taps still work
         onMoveShouldSetPanResponder: (_, { dx, dy }) => dy > 6 && Math.abs(dy) > Math.abs(dx),
         onPanResponderMove: (_, { dy }) => drag.setValue(Math.max(0, dy)),
         onPanResponderRelease: (_, { dy, vy }) => {

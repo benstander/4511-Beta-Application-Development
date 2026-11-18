@@ -49,6 +49,7 @@ export function useCreateDraft() {
 }
 
 export function updateCreateDraft(patch: Partial<CreateDraft>) {
+  // New object so React re-renders
   draft = { ...draft, ...patch };
   listeners.forEach((listener) => listener());
 }

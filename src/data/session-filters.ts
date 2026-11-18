@@ -32,6 +32,7 @@ export function formatMinutes(minutes: number) {
 
 export function applySessionFilters(sessions: Session[], filters: SessionFilters) {
   const location = filters.location.trim().toLowerCase();
+  // Session has to match every filter that's set
   return sessions.filter(
     (s) =>
       (location === '' || s.location.toLowerCase().includes(location)) &&
@@ -42,7 +43,6 @@ export function applySessionFilters(sessions: Session[], filters: SessionFilters
   );
 }
 
-// How many filters are on
 export function countActiveFilters(filters: SessionFilters) {
   return activeFilterPills(filters).length;
 }

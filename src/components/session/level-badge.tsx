@@ -13,7 +13,6 @@ type LevelBadgeProps = {
   size?: 'small' | 'large';
 };
 
-// Level tag (Social, Competitive, Beginner)
 export function LevelBadge({ level, size = 'small' }: LevelBadgeProps) {
   return (
     <View

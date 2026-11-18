@@ -13,7 +13,6 @@ type TextFieldProps = {
   maxLength?: number;
 };
 
-// Text input that matches the other form fields
 export function TextField({
   value,
   onChangeText,

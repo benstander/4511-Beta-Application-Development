@@ -48,6 +48,7 @@ export function PickerSheet({
   return (
     <BottomSheet
       isPresented={visible}
+      // Swiping down closes it without saving
       onIsPresentedChange={(presented) => {
         if (!presented) onClose();
       }}

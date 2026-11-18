@@ -28,7 +28,6 @@ type PersonRowProps = {
   actionLabel?: string;
 };
 
-// Row with avatar, name and a status icon
 export function PersonRow({ person, status = 'going', onPress, actionLabel }: PersonRowProps) {
   const theme = useTheme();
   const name = person.id === CURRENT_USER.id ? `${person.name} (you)` : person.name;
@@ -49,6 +48,7 @@ export function PersonRow({ person, status = 'going', onPress, actionLabel }: Pe
     </>
   );
 
+  // Tappable rows are buttons, the rest are read as one item by screen readers
   if (onPress) {
     return (
       <Pressable
@@ -80,7 +80,6 @@ type PersonListProps = {
   invited?: Person[];
 };
 
-// List of PersonRows
 export function PersonList({ people, invited = [] }: PersonListProps) {
   return (
     <View style={styles.list}>

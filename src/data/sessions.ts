@@ -1,7 +1,7 @@
 import { PEOPLE } from '@/data/people';
 import { SPORTS, type Session, type Sport } from '@/types/session';
 
-// Fake sessions for now. The first 3 are from the home screen design
+// Fake sessions for now
 
 export const SESSION_CATEGORIES = ['All', ...SPORTS] as const;
 

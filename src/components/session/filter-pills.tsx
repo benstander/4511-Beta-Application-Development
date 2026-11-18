@@ -14,11 +14,11 @@ type FilterPillsProps = {
   onChange: (filters: SessionFilters) => void;
 };
 
-// Pill for each filter, tap the x to remove it
 export function FilterPills({ filters, onChange }: FilterPillsProps) {
   const theme = useTheme();
   const pills = activeFilterPills(filters);
 
+  // Hide if no filters are on
   if (pills.length === 0) return null;
 
   return (

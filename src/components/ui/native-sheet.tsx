@@ -14,6 +14,7 @@ type NativeSheetProps = {
 };
 
 // Native iOS sheet. Sheets passed in as overlay show on top of it
+// (iOS only stacks sheets if one is inside the other)
 export function NativeSheet({ visible, onClose, children, overlay }: NativeSheetProps) {
   const theme = useTheme();
   const scheme = useColorScheme();

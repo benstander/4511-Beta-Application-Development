@@ -8,7 +8,6 @@ type BackButtonProps = {
   onPress?: () => void;
 };
 
-// Round back button
 export function BackButton({ onPress }: BackButtonProps) {
   const theme = useTheme();
 

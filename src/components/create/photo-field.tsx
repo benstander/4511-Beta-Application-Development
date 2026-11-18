@@ -19,6 +19,7 @@ export function PhotoField({ uri, onChange }: PhotoFieldProps) {
       mediaTypes: ['images'],
       quality: 0.8,
     });
+    // Do nothing if they cancelled
     if (!result.canceled && result.assets[0]) {
       onChange(result.assets[0].uri);
     }

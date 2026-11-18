@@ -21,6 +21,7 @@ export default function CreateCreatedScreen() {
     resetCreateDraft();
   }, []);
 
+  // Change "Link copied" back after 2 seconds
   useEffect(() => {
     if (!copied) return;
     const timer = setTimeout(() => setCopied(false), 2000);
@@ -28,6 +29,7 @@ export default function CreateCreatedScreen() {
   }, [copied]);
 
   const copyLink = async () => {
+    // Link that opens this session in the app
     await Clipboard.setStringAsync(Linking.createURL(`/session/${id}`));
     setCopied(true);
   };

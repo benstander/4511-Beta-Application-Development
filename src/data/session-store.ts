@@ -83,6 +83,7 @@ let state = buildState(new Set(), []);
 let hydrated = false;
 const listeners = new Set<() => void>();
 
+// Tell every screen to re-render
 function emit() {
   listeners.forEach((listener) => listener());
 }
@@ -92,6 +93,7 @@ function subscribe(listener: () => void) {
   return () => listeners.delete(listener);
 }
 
+// Save in the background, just warn if it fails
 function save(key: string, value: unknown) {
   AsyncStorage.setItem(key, JSON.stringify(value)).catch((error) =>
     console.warn(`Could not save ${key}`, error)
@@ -110,6 +112,7 @@ function setCreated(created: StoredSession[]) {
   save(CREATED_KEY, created);
 }
 
+// If the saved data is missing or broken just use an empty list
 function parseList(raw: string | null): unknown[] {
   try {
     const value = raw ? (JSON.parse(raw) as unknown) : [];
@@ -121,6 +124,7 @@ function parseList(raw: string | null): unknown[] {
 
 let hydratePromise: Promise<void> | undefined;
 export function hydrateSessionStore() {
+  // Only load once
   if (hydratePromise) return hydratePromise;
   hydratePromise = Promise.all([
     AsyncStorage.getItem(JOINED_KEY),
@@ -133,6 +137,7 @@ export function hydrateSessionStore() {
     })
     .catch((error) => console.warn('Could not load saved sessions', error))
     .finally(() => {
+      // Still mark as ready if loading failed so the app opens
       hydrated = true;
       emit();
     });
@@ -185,6 +190,7 @@ export function createSession({ startsAt, endsAt, ...rest }: NewSession) {
   const stored: StoredSession = {
     ...rest,
     id,
+    // JSON can't store Dates so save them as text
     startsAt: startsAt.toISOString(),
     endsAt: endsAt.toISOString(),
   };
@@ -192,7 +198,6 @@ export function createSession({ startsAt, endsAt, ...rest }: NewSession) {
   return id;
 }
 
-// Delete a session you made
 export function deleteSession(id: string) {
   setCreated(state.created.filter((session) => session.id !== id));
 }

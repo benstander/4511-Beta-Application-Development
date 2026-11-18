@@ -90,6 +90,7 @@ export function StepScreen({ title, showBack, centerTitle, children, footer }: S
   );
 }
 
+// true when the keyboard is open
 function useKeyboardOpen() {
   const [open, setOpen] = useState(false);
 

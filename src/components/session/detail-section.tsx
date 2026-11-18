@@ -9,7 +9,6 @@ type DetailSectionProps = {
   children: ReactNode;
 };
 
-// Section with a title on the session page
 export function DetailSection({ title, children }: DetailSectionProps) {
   const theme = useTheme();
 

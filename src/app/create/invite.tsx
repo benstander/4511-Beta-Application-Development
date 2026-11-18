@@ -56,6 +56,7 @@ export default function CreateInviteScreen() {
             No friends match &quot;{query.trim()}&quot;.
           </Text>
         )}
+        {/* Only show View all when not searching and there are more friends */}
         {q === '' && FRIENDS.length > SHORT_LIST && (
           <Pressable
             onPress={() => setShowAll((all) => !all)}

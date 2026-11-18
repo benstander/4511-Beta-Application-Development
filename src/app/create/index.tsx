@@ -9,7 +9,6 @@ import { useTheme } from '@/hooks/use-theme';
 
 const SPORT_EMOJIS = ['🏋️', '🏃', '⚽', '🏀', '🎾', '🏊', '🚴', '🧗'];
 
-// Intro screen for the Create tab
 export default function CreateIntroScreen() {
   const theme = useTheme();
   const bottomTabInset = useBottomTabInset();
@@ -20,7 +19,6 @@ export default function CreateIntroScreen() {
         edges={['top', 'left', 'right']}
         style={[styles.safeArea, { paddingBottom: bottomTabInset + Spacing.three }]}>
         <View style={styles.content}>
-          {/* 2 rows of 4 */}
           <View style={styles.emojis} accessible={false}>
             {[SPORT_EMOJIS.slice(0, 4), SPORT_EMOJIS.slice(4)].map((row) => (
               <View key={row[0]} style={styles.emojiRow}>

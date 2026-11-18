@@ -12,7 +12,6 @@ type CategoryTabsProps<T extends string> = {
   filterCount?: number;
 };
 
-// Category tabs with the filter button on the right
 export function CategoryTabs<T extends string>({
   categories,
   selected,

@@ -11,7 +11,6 @@ type SessionHeaderProps = {
   session: Session;
 };
 
-// Top of the session page: photo, title, level, time and place
 export function SessionHeader({ session }: SessionHeaderProps) {
   const theme = useTheme();
 

@@ -13,7 +13,6 @@ export type SessionCardProps = {
   detailPathname?: '/session/[id]' | '/my-sessions/session/[id]';
 };
 
-// Session card, tap to open the session
 export function SessionCard({ session, detailPathname = '/session/[id]' }: SessionCardProps) {
   const theme = useTheme();
 

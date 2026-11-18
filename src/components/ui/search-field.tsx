@@ -13,7 +13,6 @@ type SearchFieldProps = {
   onBlur?: () => void;
 };
 
-// Search box with a magnifying glass
 export function SearchField({
   value,
   onChangeText,

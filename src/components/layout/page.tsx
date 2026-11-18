@@ -11,7 +11,6 @@ type PageProps = {
   children?: ReactNode;
 };
 
-// Tab page with the title at the top
 export function Page({ title, children }: PageProps) {
   const theme = useTheme();
   const bottomTabInset = useBottomTabInset();

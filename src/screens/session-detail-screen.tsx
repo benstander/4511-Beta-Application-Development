@@ -29,6 +29,7 @@ export default function SessionDetailScreen() {
   const [confirmingLeave, setConfirmingLeave] = useState(false);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
 
+  // Session might have been deleted
   if (!session) {
     return (
       <View style={[styles.container, { backgroundColor: theme.background }]}>
@@ -72,6 +73,7 @@ export default function SessionDetailScreen() {
               <PersonList people={session.attendees} invited={session.invited} />
             </DetailSection>
 
+            {/* Creator can delete, attendees can leave */}
             {mine ? (
               <Button
                 label="Delete session"
@@ -90,6 +92,7 @@ export default function SessionDetailScreen() {
           </View>
         </ScrollView>
 
+        {/* Join button, or Going once joined */}
         <View style={[styles.footer, { paddingBottom: bottomTabInset + 16 }]}>
           {going ? (
             <Button label="Going" icon={require('@/assets/icons/check-badge.svg')} />

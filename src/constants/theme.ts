@@ -1,5 +1,3 @@
-// Colours, fonts and spacing. Use useTheme() to get the right colours
-
 import { Platform } from 'react-native';
 
 export const Colors = {

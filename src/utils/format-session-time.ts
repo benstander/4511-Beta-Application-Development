@@ -2,6 +2,7 @@ const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
 
 function ordinal(day: number) {
   const lastTwo = day % 100;
+  // 11th, 12th and 13th don't follow the st/nd/rd rule
   if (lastTwo >= 11 && lastTwo <= 13) return `${day}th`;
   switch (day % 10) {
     case 1:
