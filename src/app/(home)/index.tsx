@@ -2,8 +2,17 @@ import { useState } from 'react';
 import { ScrollView, StyleSheet, Text } from 'react-native';
 
 import { Page } from '@/components/layout/page';
+import { FilterPills } from '@/components/session/filter-pills';
+import { FilterSheet } from '@/components/session/filter-sheet';
 import { SessionCard } from '@/components/session/session-card';
 import { CategoryTabs } from '@/components/ui/category-tabs';
+import {
+  EMPTY_FILTERS,
+  applySessionFilters,
+  countActiveFilters,
+  hasActiveFilters,
+  type SessionFilters,
+} from '@/data/session-filters';
 import { useSessions } from '@/data/session-store';
 import { SESSION_CATEGORIES, type SessionCategory } from '@/data/sessions';
 import { useTheme } from '@/hooks/use-theme';
@@ -11,16 +20,27 @@ import { useTheme } from '@/hooks/use-theme';
 export default function SessionsScreen() {
   const theme = useTheme();
   const [category, setCategory] = useState<SessionCategory>('All');
+  const [filters, setFilters] = useState<SessionFilters>(EMPTY_FILTERS);
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const allSessions = useSessions();
+  const filtering = hasActiveFilters(filters);
 
-  const sessions =
+  const inCategory =
     category === 'All'
       ? allSessions
       : allSessions.filter((session) => session.sport === category);
+  const sessions = applySessionFilters(inCategory, filters);
 
   return (
     <Page title="Sessions">
-      <CategoryTabs categories={SESSION_CATEGORIES} selected={category} onSelect={setCategory} />
+      <CategoryTabs
+        categories={SESSION_CATEGORIES}
+        selected={category}
+        onSelect={setCategory}
+        onFilterPress={() => setFiltersOpen(true)}
+        filterCount={countActiveFilters(filters)}
+      />
+      <FilterPills filters={filters} onChange={setFilters} />
       <ScrollView
         style={styles.list}
         contentContainerStyle={styles.listContent}
@@ -30,10 +50,23 @@ export default function SessionsScreen() {
         ))}
         {sessions.length === 0 && (
           <Text style={[styles.empty, { color: theme.textSecondary }]}>
-            {`No ${category.toLowerCase()} sessions yet.`}
+            {filtering
+              ? 'No sessions match your filters.'
+              : `No ${category.toLowerCase()} sessions yet.`}
           </Text>
         )}
       </ScrollView>
+
+      <FilterSheet
+        visible={filtersOpen}
+        filters={filters}
+        sessions={allSessions}
+        onClose={() => setFiltersOpen(false)}
+        onApply={(next) => {
+          setFilters(next);
+          setFiltersOpen(false);
+        }}
+      />
     </Page>
   );
 }

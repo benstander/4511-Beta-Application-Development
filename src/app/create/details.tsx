@@ -49,6 +49,7 @@ export default function CreateDetailsScreen() {
           options={SPORT_OPTIONS}
           selected={draft.sport}
           onChange={(sport) => updateCreateDraft({ sport })}
+          allowAny={false}
         />
       </FormField>
 
@@ -68,6 +69,7 @@ export default function CreateDetailsScreen() {
           options={LEVEL_OPTIONS}
           selected={draft.level}
           onChange={(level) => updateCreateDraft({ level })}
+          allowAny={false}
           badgeColor={(level) => SessionLevelColors[level]}
         />
       </FormField>

@@ -26,16 +26,22 @@ type NativeMenuFieldProps<T> = {
   placeholder: string;
   options: MenuOption<T>[];
   selected: T | null;
-  onChange: (value: T) => void;
+  onChange: (value: T | null) => void;
+  anyLabel?: string;
+  allowAny?: boolean;
   badgeColor?: (value: T) => string;
 };
 
-// Field that opens a native iOS menu to pick an option (iOS only)
+const ANY_TAG = -1;
+
+// Field that opens a native iOS menu to pick an option, with "Any" to clear it (iOS only)
 export function NativeMenuField<T>({
   placeholder,
   options,
   selected,
   onChange,
+  anyLabel = 'Any',
+  allowAny = true,
   badgeColor,
 }: NativeMenuFieldProps<T>) {
   const theme = useTheme();
@@ -98,9 +104,12 @@ export function NativeMenuField<T>({
             menuIndicator('hidden'),
           ]}>
           <Picker
-            selection={selectedIndex}
-            onSelectionChange={(index: number) => onChange(options[index].value)}
+            selection={selectedIndex === -1 ? ANY_TAG : selectedIndex}
+            onSelectionChange={(index: number) =>
+              onChange(index === ANY_TAG ? null : options[index].value)
+            }
             modifiers={[pickerStyle('inline')]}>
+            {allowAny && <Text modifiers={[tag(ANY_TAG)]}>{anyLabel}</Text>}
             {options.map((option, index) => (
               <Text key={option.label} modifiers={[tag(index)]}>
                 {option.label}

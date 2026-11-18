@@ -3,9 +3,16 @@ import { useState } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 
 import { Page } from '@/components/layout/page';
+import { FilterSheet } from '@/components/session/filter-sheet';
 import { SessionCard } from '@/components/session/session-card';
 import { CategoryTabs } from '@/components/ui/category-tabs';
 import { EmptyState } from '@/components/ui/empty-state';
+import {
+  EMPTY_FILTERS,
+  applySessionFilters,
+  countActiveFilters,
+  type SessionFilters,
+} from '@/data/session-filters';
 import { useMySessions } from '@/data/session-store';
 
 const TABS = ['Going', 'Created', 'History'] as const;
@@ -33,22 +40,40 @@ export default function MySessionsScreen() {
     setLastTabParam(tabParam);
     if (isTab(tabParam)) setTab(tabParam);
   }
+  const [filters, setFilters] = useState<SessionFilters>(EMPTY_FILTERS);
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const mySessions = useMySessions();
 
-  const sessions = { Going: mySessions.going, Created: mySessions.created, History: mySessions.history }[
+  const inTab = { Going: mySessions.going, Created: mySessions.created, History: mySessions.history }[
     tab
   ];
+  const sessions = applySessionFilters(inTab, filters);
+  const filteredOut = inTab.length > 0 && sessions.length === 0;
   const empty = EMPTY[tab];
 
   return (
     <Page title="My Sessions">
-      <CategoryTabs categories={TABS} selected={tab} onSelect={setTab} />
+      <CategoryTabs
+        categories={TABS}
+        selected={tab}
+        onSelect={setTab}
+        onFilterPress={() => setFiltersOpen(true)}
+        filterCount={countActiveFilters(filters)}
+      />
       {sessions.length === 0 ? (
-        <EmptyState
-          message={empty.message}
-          actionLabel={empty.actionLabel}
-          onAction={() => router.navigate(empty.href)}
-        />
+        filteredOut ? (
+          <EmptyState
+            message="No sessions match your filters."
+            actionLabel="Clear filters"
+            onAction={() => setFilters(EMPTY_FILTERS)}
+          />
+        ) : (
+          <EmptyState
+            message={empty.message}
+            actionLabel={empty.actionLabel}
+            onAction={() => router.navigate(empty.href)}
+          />
+        )
       ) : (
         <ScrollView
           style={styles.list}
@@ -63,6 +88,17 @@ export default function MySessionsScreen() {
           ))}
         </ScrollView>
       )}
+
+      <FilterSheet
+        visible={filtersOpen}
+        filters={filters}
+        sessions={[...mySessions.going, ...mySessions.created, ...mySessions.history]}
+        onClose={() => setFiltersOpen(false)}
+        onApply={(next) => {
+          setFilters(next);
+          setFiltersOpen(false);
+        }}
+      />
     </Page>
   );
 }

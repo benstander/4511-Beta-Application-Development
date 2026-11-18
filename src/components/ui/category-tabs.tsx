@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { FontFamily } from '@/constants/theme';
+import { FontFamily, Palette } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 type CategoryTabsProps<T extends string> = {
@@ -9,6 +9,7 @@ type CategoryTabsProps<T extends string> = {
   selected: T;
   onSelect: (category: T) => void;
   onFilterPress?: () => void;
+  filterCount?: number;
 };
 
 // Category tabs with the filter button on the right
@@ -17,8 +18,10 @@ export function CategoryTabs<T extends string>({
   selected,
   onSelect,
   onFilterPress,
+  filterCount = 0,
 }: CategoryTabsProps<T>) {
   const theme = useTheme();
+  const filterActive = filterCount > 0;
 
   return (
     <View style={styles.container}>
@@ -52,14 +55,32 @@ export function CategoryTabs<T extends string>({
         onPress={onFilterPress}
         disabled={!onFilterPress}
         role="button"
-        accessibilityLabel="Filters"
+        accessibilityLabel={
+          filterActive
+            ? `Filters, ${filterCount} applied`
+            : 'Filters'
+        }
         hitSlop={6}
-        style={({ pressed }) => [styles.filterButton, pressed && styles.pressed]}>
+        style={({ pressed }) => [
+          styles.filterButton,
+          // Blue outline when filters are on
+          { borderColor: filterActive ? Palette.primary : 'transparent' },
+          pressed && styles.pressed,
+        ]}>
         <Image
           source={require('@/assets/icons/adjustments-horizontal.svg')}
           style={styles.filterIcon}
           tintColor={theme.text}
         />
+        {filterActive && (
+          <View
+            style={[
+              styles.countBadge,
+              { backgroundColor: Palette.primary },
+            ]}>
+            <Text style={styles.countText}>{filterCount}</Text>
+          </View>
+        )}
       </Pressable>
     </View>
   );
@@ -98,10 +119,29 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   filterButton: {
-    padding: 8,
+    padding: 6,
+    borderRadius: 999,
+    borderWidth: 2,
   },
   filterIcon: {
     width: 26,
     height: 26,
+  },
+  countBadge: {
+    position: 'absolute',
+    top: -3,
+    right: -3,
+    minWidth: 18,
+    height: 18,
+    paddingHorizontal: 3,
+    borderRadius: 9,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  countText: {
+    fontFamily: FontFamily.bold,
+    fontSize: 10,
+    lineHeight: 12,
+    color: Palette.onColor,
   },
 });
