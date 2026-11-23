@@ -15,6 +15,7 @@ import {
   EMPTY_DRAFT,
   draftFromSession,
   draftToNewSession,
+  hasInvites,
   type CreateDraft,
 } from '@/data/create-draft';
 import { updateSession, useSession } from '@/data/session-store';
@@ -67,7 +68,7 @@ export default function EditSessionScreen() {
           maxLength={600}
         />
       </FormField>
-      <FriendInvites draft={form} onChange={onChange} />
+      {hasInvites(form.type) && <FriendInvites draft={form} onChange={onChange} />}
     </StepScreen>
   );
 }

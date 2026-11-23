@@ -4,11 +4,12 @@ import { StepScreen } from '@/components/layout/step-screen';
 import { Button } from '@/components/ui/button';
 import { FormField } from '@/components/ui/form-field';
 import { TextField } from '@/components/ui/text-field';
-import { updateCreateDraft, useCreateDraft } from '@/data/create-draft';
+import { hasInvites, updateCreateDraft, useCreateDraft } from '@/data/create-draft';
 
 // Step 4: description
 export default function CreateDescribeScreen() {
   const draft = useCreateDraft();
+  const invites = hasInvites(draft.type);
 
   return (
     <StepScreen
@@ -16,9 +17,10 @@ export default function CreateDescribeScreen() {
       showBack
       footer={
         <Button
-          label="Find friends"
+          label={invites ? 'Find friends' : 'Confirm session'}
           disabled={draft.description.trim() === ''}
-          onPress={() => router.push('/create/invite')}
+          // Solo sessions skip the invite step
+          onPress={() => router.push(invites ? '/create/invite' : '/create/summary')}
         />
       }>
       <FormField label="Description">

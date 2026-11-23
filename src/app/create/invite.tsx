@@ -5,7 +5,7 @@ import { StepScreen } from '@/components/layout/step-screen';
 import { Button } from '@/components/ui/button';
 import { updateCreateDraft, useCreateDraft } from '@/data/create-draft';
 
-// Step 5: invite friends
+// Step 5: invite friends. Solo sessions skip this
 export default function CreateInviteScreen() {
   const draft = useCreateDraft();
 

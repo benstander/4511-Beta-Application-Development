@@ -84,7 +84,7 @@ export function SessionSummary({
         </View>
         <View style={[styles.row, border]}>
           <Text style={[styles.rowText, styles.rowTextShrink, { color: theme.text }]} numberOfLines={1}>
-            {invitedText(invited)}
+            {type === 'Solo' ? 'Just you' : invitedText(invited)}
           </Text>
           {invited.length > 0 && (
             <Pressable

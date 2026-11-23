@@ -8,6 +8,12 @@ import { dateFromKeyAt, dateKey, minutesOf } from '@/utils/date-key';
 
 // The session being made in the Create tab. Shared between all the steps.
 // Edit session uses the same shape
+
+// Solo sessions don't invite anyone
+export function hasInvites(type: SessionType | null) {
+  return type !== 'Solo';
+}
+
 export type CreateDraft = {
   title: string;
   type: SessionType | null;
@@ -127,7 +133,8 @@ export function draftToNewSession(d: CreateDraft): NewSession | null {
     location: d.location.trim(),
     coordinates: { latitude: place.latitude, longitude: place.longitude },
     description: d.description.trim(),
-    invitedIds: d.invitedIds,
+    // Solo sessions have no invites
+    invitedIds: hasInvites(type) ? d.invitedIds : [],
     photoUri: d.photoUri,
   };
 }
