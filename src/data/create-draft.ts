@@ -2,9 +2,12 @@ import { useSyncExternalStore } from 'react';
 
 import type { SessionLevel } from '@/constants/theme';
 import type { Place } from '@/data/places';
-import type { SessionType, Sport } from '@/types/session';
+import type { NewSession } from '@/data/session-store';
+import type { Session, SessionType, Sport } from '@/types/session';
+import { dateFromKeyAt, dateKey, minutesOf } from '@/utils/date-key';
 
-// The session being made in the Create tab. Shared between all the steps
+// The session being made in the Create tab. Shared between all the steps.
+// Edit session uses the same shape
 export type CreateDraft = {
   title: string;
   type: SessionType | null;
@@ -20,7 +23,7 @@ export type CreateDraft = {
   invitedIds: string[];
 };
 
-const EMPTY_DRAFT: CreateDraft = {
+export const EMPTY_DRAFT: CreateDraft = {
   title: '',
   type: null,
   sport: null,
@@ -57,14 +60,6 @@ export function updateCreateDraft(patch: Partial<CreateDraft>) {
   listeners.forEach((listener) => listener());
 }
 
-export function toggleInvite(personId: string) {
-  updateCreateDraft({
-    invitedIds: draft.invitedIds.includes(personId)
-      ? draft.invitedIds.filter((id) => id !== personId)
-      : [...draft.invitedIds, personId],
-  });
-}
-
 export function resetCreateDraft() {
   draft = EMPTY_DRAFT;
   listeners.forEach((listener) => listener());
@@ -78,4 +73,61 @@ export function detailsComplete(d: CreateDraft) {
 // Step 2 done? (date, start and end time)
 export function timesComplete(d: CreateDraft) {
   return d.date !== null && d.startMinutes !== null && d.endMinutes !== null;
+}
+
+export type DraftFieldsProps = {
+  draft: CreateDraft;
+  onChange: (patch: Partial<CreateDraft>) => void;
+};
+
+// Turn a saved session into the form so it can be edited
+export function draftFromSession(session: Session): CreateDraft {
+  const { image, coordinates } = session;
+  return {
+    title: session.title,
+    type: session.type ?? 'Public',
+    sport: session.sport,
+    level: session.level,
+    // Only picked photos have a uri
+    photoUri: typeof image === 'object' && image.uri ? image.uri : null,
+    date: dateKey(session.startsAt),
+    startMinutes: minutesOf(session.startsAt),
+    endMinutes: minutesOf(session.endsAt),
+    location: session.location,
+    // Location already has the suburb in it
+    place: coordinates ? { name: session.location, area: '', ...coordinates } : null,
+    description: session.description,
+    invitedIds: (session.invited ?? []).map((person) => person.id),
+  };
+}
+
+// Turns the draft into a session, or null if something's missing
+export function draftToNewSession(d: CreateDraft): NewSession | null {
+  const { type, sport, level, date, startMinutes, endMinutes, place } = d;
+  if (
+    !type ||
+    !sport ||
+    !level ||
+    date === null ||
+    startMinutes === null ||
+    endMinutes === null ||
+    !place ||
+    d.title.trim() === '' ||
+    d.description.trim() === ''
+  ) {
+    return null;
+  }
+  return {
+    title: d.title.trim(),
+    sport,
+    level,
+    type,
+    startsAt: dateFromKeyAt(date, startMinutes),
+    endsAt: dateFromKeyAt(date, endMinutes),
+    location: d.location.trim(),
+    coordinates: { latitude: place.latitude, longitude: place.longitude },
+    description: d.description.trim(),
+    invitedIds: d.invitedIds,
+    photoUri: d.photoUri,
+  };
 }

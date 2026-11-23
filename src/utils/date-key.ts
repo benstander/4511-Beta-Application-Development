@@ -30,3 +30,10 @@ export function dateAtMinutes(minutes: number) {
   date.setHours(Math.floor(minutes / 60), minutes % 60, 0, 0);
   return date;
 }
+
+// Day key + minutes -> Date
+export function dateFromKeyAt(key: string, minutes: number) {
+  const date = dateFromKey(key);
+  date.setHours(Math.floor(minutes / 60), minutes % 60, 0, 0);
+  return date;
+}

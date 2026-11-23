@@ -186,18 +186,26 @@ export function leaveSession(id: string) {
   setJoinedIds(next);
 }
 
-// Saves a new session and returns its id
-export function createSession({ startsAt, endsAt, ...rest }: NewSession) {
-  const id = `created-${Date.now()}`;
-  const stored: StoredSession = {
+function toStored(id: string, { startsAt, endsAt, ...rest }: NewSession): StoredSession {
+  return {
     ...rest,
     id,
     // JSON can't store Dates so save them as text
     startsAt: startsAt.toISOString(),
     endsAt: endsAt.toISOString(),
   };
-  setCreated([stored, ...state.created]);
+}
+
+// Saves a new session and returns its id
+export function createSession(input: NewSession) {
+  const id = `created-${Date.now()}`;
+  setCreated([toStored(id, input), ...state.created]);
   return id;
+}
+
+// Update a session you made
+export function updateSession(id: string, input: NewSession) {
+  setCreated(state.created.map((session) => (session.id === id ? toStored(id, input) : session)));
 }
 
 export function deleteSession(id: string) {

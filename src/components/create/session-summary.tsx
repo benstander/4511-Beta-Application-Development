@@ -7,7 +7,7 @@ import { SessionMap } from '@/components/session/session-map';
 import { BottomSheet } from '@/components/ui/bottom-sheet';
 import { FontFamily, Palette, SessionLevelColors, type SessionLevel } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
-import type { Coordinates, Person, SessionType } from '@/types/session';
+import type { Coordinates, Person, SessionType, Sport } from '@/types/session';
 
 const LEVEL_LABELS: Record<SessionLevel, string> = {
   social: 'Social',
@@ -18,6 +18,7 @@ const LEVEL_LABELS: Record<SessionLevel, string> = {
 type SessionSummaryProps = {
   title: string;
   image: ImageSource | number;
+  sport: Sport;
   type: SessionType;
   level: SessionLevel;
   invited: Person[];
@@ -32,6 +33,7 @@ type SessionSummaryProps = {
 export function SessionSummary({
   title,
   image,
+  sport,
   type,
   level,
   invited,
@@ -72,6 +74,15 @@ export function SessionSummary({
 
       <View>
         <View style={[styles.row, styles.rowFirst, border]}>
+          <Text style={[styles.rowText, { color: theme.text }]}>{sport}</Text>
+        </View>
+        <View style={[styles.row, border]}>
+          <Text style={[styles.rowText, { color: theme.text }]}>{formatShortDate(startsAt)}</Text>
+          <Text style={[styles.rowText, { color: theme.text }]}>
+            {formatClock(startsAt)} - {formatClock(endsAt)}
+          </Text>
+        </View>
+        <View style={[styles.row, border]}>
           <Text style={[styles.rowText, styles.rowTextShrink, { color: theme.text }]} numberOfLines={1}>
             {invitedText(invited)}
           </Text>
@@ -84,12 +95,6 @@ export function SessionSummary({
               <Text style={[styles.rowText, { color: theme.text }]}>View all</Text>
             </Pressable>
           )}
-        </View>
-        <View style={[styles.row, border]}>
-          <Text style={[styles.rowText, { color: theme.text }]}>{formatShortDate(startsAt)}</Text>
-          <Text style={[styles.rowText, { color: theme.text }]}>
-            {formatClock(startsAt)} - {formatClock(endsAt)}
-          </Text>
         </View>
         <View style={[styles.row, !coordinates && styles.rowLast, border]}>
           <Text style={[styles.rowText, styles.rowTextShrink, { color: theme.text }]}>{location}</Text>

@@ -64,6 +64,7 @@ export default function CreateCreatedScreen() {
         <SessionSummary
           title={session.title}
           image={session.image ?? SPORT_IMAGES[session.sport]}
+          sport={session.sport}
           type={session.type}
           level={session.level}
           invited={session.invited ?? []}

@@ -2,8 +2,10 @@ import { Image } from 'expo-image';
 import { useEffect, useRef, useState, type ComponentRef } from 'react';
 import { Keyboard, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
+import { SessionMap } from '@/components/session/session-map';
 import { fieldBoxStyle } from '@/components/ui/form-field';
 import { FontFamily } from '@/constants/theme';
+import type { DraftFieldsProps } from '@/data/create-draft';
 import { placeLabel, searchPlaces, type Place } from '@/data/places';
 import { useTheme } from '@/hooks/use-theme';
 
@@ -118,7 +120,35 @@ export function LocationSearch({ value, onChangeText, onSelect, picked }: Locati
   );
 }
 
+// Location search box, with a map once a place is picked
+export function LocationField({ draft, onChange }: DraftFieldsProps) {
+  const { place } = draft;
+
+  return (
+    <View style={styles.field}>
+      <LocationSearch
+        value={draft.location}
+        // Typing again clears the picked place so you have to pick a new one
+        onChangeText={(location) => onChange({ location, place: null })}
+        onSelect={(picked) => onChange({ place: picked, location: placeLabel(picked) })}
+        picked={place !== null}
+      />
+      {place && (
+        <SessionMap
+          // New key so the map moves when the place changes
+          key={`${place.latitude},${place.longitude}`}
+          coordinates={{ latitude: place.latitude, longitude: place.longitude }}
+          label={draft.location}
+        />
+      )}
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
+  field: {
+    gap: 12,
+  },
   box: {
     gap: 12,
   },

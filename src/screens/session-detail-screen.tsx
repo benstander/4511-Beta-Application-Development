@@ -1,4 +1,4 @@
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams, useSegments } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -25,6 +25,7 @@ import { useTheme } from '@/hooks/use-theme';
 export default function SessionDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const session = useSession(id);
+  const segments = useSegments();
   const theme = useTheme();
   const bottomTabInset = useBottomTabInset();
   const [confirmingLeave, setConfirmingLeave] = useState(false);
@@ -46,6 +47,13 @@ export default function SessionDetailScreen() {
 
   const going = isAttending(session);
   const mine = isCreator(session);
+
+  const editSession = () =>
+    router.push(
+      segments[0] === 'my-sessions'
+        ? { pathname: '/my-sessions/session/edit/[id]', params: { id: session.id } }
+        : { pathname: '/session/edit/[id]', params: { id: session.id } }
+    );
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
@@ -99,9 +107,11 @@ export default function SessionDetailScreen() {
           </View>
         </ScrollView>
 
-        {/* Join button, or Going once joined */}
+        {/* Edit if it's yours, otherwise Join or Going */}
         <View style={[styles.footer, { paddingBottom: bottomTabInset + 16 }]}>
-          {going ? (
+          {mine ? (
+            <Button label="Edit session" onPress={editSession} />
+          ) : going ? (
             <Button label="Going" icon={require('@/assets/icons/check-badge.svg')} />
           ) : (
             <Button label="Join session" onPress={() => joinSession(session.id)} />
