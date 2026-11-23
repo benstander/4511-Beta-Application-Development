@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 
 import { Page } from '@/components/layout/page';
+import { FilterPills } from '@/components/session/filter-pills';
 import { FilterSheet } from '@/components/session/filter-sheet';
 import { SessionCard } from '@/components/session/session-card';
 import { CategoryTabs } from '@/components/ui/category-tabs';
@@ -60,6 +61,7 @@ export default function MySessionsScreen() {
         onFilterPress={() => setFiltersOpen(true)}
         filterCount={countActiveFilters(filters)}
       />
+      <FilterPills filters={filters} onChange={setFilters} />
       {sessions.length === 0 ? (
         filteredOut ? (
           <EmptyState
