@@ -6,17 +6,21 @@ import { useTheme } from '@/hooks/use-theme';
 
 type FormFieldProps = {
   label: string;
+  labelAccessory?: ReactNode;
   children: ReactNode;
   style?: StyleProp<ViewStyle>;
 };
 
 // Label above a form input
-export function FormField({ label, children, style }: FormFieldProps) {
+export function FormField({ label, labelAccessory, children, style }: FormFieldProps) {
   const theme = useTheme();
 
   return (
     <View style={[styles.field, style]}>
-      <Text style={[styles.label, { color: theme.text }]}>{label}</Text>
+      <View style={styles.labelRow}>
+        <Text style={[styles.label, { color: theme.text }]}>{label}</Text>
+        {labelAccessory}
+      </View>
       {children}
     </View>
   );
@@ -33,6 +37,11 @@ export const fieldBoxStyle: ViewStyle = {
 
 const styles = StyleSheet.create({
   field: {
+    gap: 6,
+  },
+  labelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 6,
   },
   label: {

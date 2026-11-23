@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 
 import { PhotoField } from '@/components/create/photo-field';
+import { SessionTypeInfo } from '@/components/create/session-type-info';
 import { StepScreen } from '@/components/layout/step-screen';
 import { Button } from '@/components/ui/button';
 import { ChoicePills } from '@/components/ui/choice-pills';
@@ -34,7 +35,7 @@ export default function CreateDetailsScreen() {
           onPress={() => router.push('/create/when')}
         />
       }>
-      <FormField label="Session type" style={{ gap: 10 }}>
+      <FormField label="Session type" labelAccessory={<SessionTypeInfo />} style={{ gap: 10 }}>
         <ChoicePills
           label="Session type"
           options={SESSION_TYPES}
