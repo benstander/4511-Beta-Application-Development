@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from 'react';
 
 import type { SessionLevel } from '@/constants/theme';
+import type { Place } from '@/data/places';
 import type { SessionType, Sport } from '@/types/session';
 
 // The session being made in the Create tab. Shared between all the steps
@@ -14,6 +15,7 @@ export type CreateDraft = {
   startMinutes: number | null;
   endMinutes: number | null;
   location: string;
+  place: Place | null;
   description: string;
   invitedIds: string[];
 };
@@ -28,6 +30,7 @@ const EMPTY_DRAFT: CreateDraft = {
   startMinutes: null,
   endMinutes: null,
   location: '',
+  place: null,
   description: '',
   invitedIds: [],
 };

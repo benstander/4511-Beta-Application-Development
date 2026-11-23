@@ -3,10 +3,11 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { PersonList } from '@/components/session/person-row';
+import { SessionMap } from '@/components/session/session-map';
 import { BottomSheet } from '@/components/ui/bottom-sheet';
 import { FontFamily, Palette, SessionLevelColors, type SessionLevel } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
-import type { Person, SessionType } from '@/types/session';
+import type { Coordinates, Person, SessionType } from '@/types/session';
 
 const LEVEL_LABELS: Record<SessionLevel, string> = {
   social: 'Social',
@@ -23,6 +24,7 @@ type SessionSummaryProps = {
   startsAt: Date;
   endsAt: Date;
   location: string;
+  coordinates?: Coordinates;
   celebrate?: boolean;
 };
 
@@ -36,6 +38,7 @@ export function SessionSummary({
   startsAt,
   endsAt,
   location,
+  coordinates,
   celebrate,
 }: SessionSummaryProps) {
   const theme = useTheme();
@@ -88,9 +91,10 @@ export function SessionSummary({
             {formatClock(startsAt)} - {formatClock(endsAt)}
           </Text>
         </View>
-        <View style={[styles.row, styles.rowLast, border]}>
+        <View style={[styles.row, !coordinates && styles.rowLast, border]}>
           <Text style={[styles.rowText, styles.rowTextShrink, { color: theme.text }]}>{location}</Text>
         </View>
+        {coordinates && <SessionMap coordinates={coordinates} label={location} attached />}
       </View>
 
       <BottomSheet

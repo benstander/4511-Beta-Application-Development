@@ -4,7 +4,7 @@ import { useSyncExternalStore } from 'react';
 import type { SessionLevel } from '@/constants/theme';
 import { CURRENT_USER, findFriend } from '@/data/people';
 import { SAMPLE_SESSIONS, SPORT_IMAGES } from '@/data/sessions';
-import type { Person, Session, SessionType, Sport } from '@/types/session';
+import type { Coordinates, Person, Session, SessionType, Sport } from '@/types/session';
 
 // Sessions shared by every screen: SAMPLE_SESSIONS plus ones you made in Create.
 // Joined ids and created sessions are saved in AsyncStorage so they stay after
@@ -22,6 +22,7 @@ type StoredSession = {
   startsAt: string;
   endsAt: string;
   location: string;
+  coordinates?: Coordinates;
   description: string;
   invitedIds: string[];
   photoUri: string | null;
@@ -57,6 +58,7 @@ function fromStored(stored: StoredSession): Session {
     startsAt: new Date(stored.startsAt),
     endsAt: new Date(stored.endsAt),
     location: stored.location,
+    coordinates: stored.coordinates,
     description: stored.description,
     creator: CURRENT_USER,
     attendees: [CURRENT_USER],

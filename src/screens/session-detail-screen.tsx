@@ -9,6 +9,7 @@ import { ConfirmSheet } from '@/components/ui/confirm-sheet';
 import { DetailSection } from '@/components/session/detail-section';
 import { PersonList, PersonRow } from '@/components/session/person-row';
 import { SessionHeader } from '@/components/session/session-header';
+import { SessionMap } from '@/components/session/session-map';
 import { FontFamily, MaxContentWidth, ScreenPadding } from '@/constants/theme';
 import {
   deleteSession,
@@ -64,6 +65,12 @@ export default function SessionDetailScreen() {
                 {session.description}
               </Text>
             </DetailSection>
+
+            {session.coordinates && (
+              <DetailSection title="Location">
+                <SessionMap coordinates={session.coordinates} label={session.location} />
+              </DetailSection>
+            )}
 
             <DetailSection title="Session creator">
               <PersonRow person={session.creator} />

@@ -5,6 +5,7 @@ import { StepScreen } from '@/components/layout/step-screen';
 import { Button } from '@/components/ui/button';
 import { useCreateDraft } from '@/data/create-draft';
 import { findFriend } from '@/data/people';
+import { placeLabel } from '@/data/places';
 import { dateFromKey } from '@/utils/date-key';
 import { createSession } from '@/data/session-store';
 import { SPORT_IMAGES } from '@/data/sessions';
@@ -18,15 +19,25 @@ function atMinutes(key: string, minutes: number) {
 // Step 6: check everything then create it
 export default function CreateSummaryScreen() {
   const draft = useCreateDraft();
-  const { type, sport, level, date, startMinutes, endMinutes } = draft;
+  const { type, sport, level, date, startMinutes, endMinutes, place } = draft;
   // Can't skip the earlier steps so these should all be filled in
-  if (!type || !sport || !level || date === null || startMinutes === null || endMinutes === null) {
+  if (
+    !type ||
+    !sport ||
+    !level ||
+    date === null ||
+    startMinutes === null ||
+    endMinutes === null ||
+    !place
+  ) {
     return null;
   }
 
   const startsAt = atMinutes(date, startMinutes);
   const endsAt = atMinutes(date, endMinutes);
   const invited = draft.invitedIds.flatMap((id) => findFriend(id) ?? []);
+  const location = placeLabel(place);
+  const coordinates = { latitude: place.latitude, longitude: place.longitude };
 
   const create = () => {
     const id = createSession({
@@ -36,7 +47,8 @@ export default function CreateSummaryScreen() {
       type,
       startsAt,
       endsAt,
-      location: draft.location.trim(),
+      location,
+      coordinates,
       description: draft.description.trim(),
       invitedIds: draft.invitedIds,
       photoUri: draft.photoUri,
@@ -59,7 +71,8 @@ export default function CreateSummaryScreen() {
         invited={invited}
         startsAt={startsAt}
         endsAt={endsAt}
-        location={draft.location.trim()}
+        location={location}
+        coordinates={coordinates}
       />
     </StepScreen>
   );

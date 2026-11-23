@@ -70,6 +70,7 @@ export default function CreateCreatedScreen() {
           startsAt={session.startsAt}
           endsAt={session.endsAt}
           location={session.location}
+          coordinates={session.coordinates}
           celebrate
         />
       )}

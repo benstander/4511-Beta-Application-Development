@@ -19,6 +19,11 @@ export const SESSION_TYPES = ['Public', 'Solo', 'Invite-only', 'Friends-only'] a
 
 export type SessionType = (typeof SESSION_TYPES)[number];
 
+export type Coordinates = {
+  latitude: number;
+  longitude: number;
+};
+
 export type Person = {
   id: string;
   name: string;
@@ -33,6 +38,7 @@ export type Session = {
   startsAt: Date;
   endsAt: Date;
   location: string;
+  coordinates?: Coordinates;
   description: string;
   creator: Person;
   attendees: Person[];
