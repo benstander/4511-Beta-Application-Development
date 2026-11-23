@@ -1,6 +1,9 @@
 import { Image } from 'expo-image';
+import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { ProfileSheet } from '@/components/profile/profile-sheet';
+import { Avatar } from '@/components/ui/avatar';
 import { FontFamily } from '@/constants/theme';
 import { CURRENT_USER } from '@/data/people';
 import { useTheme } from '@/hooks/use-theme';
@@ -28,50 +31,46 @@ type PersonRowProps = {
   actionLabel?: string;
 };
 
+// Tap the row to see their profile, tap the icon to invite or remove
 export function PersonRow({ person, status = 'going', onPress, actionLabel }: PersonRowProps) {
   const theme = useTheme();
+  const [profileOpen, setProfileOpen] = useState(false);
   const name = person.id === CURRENT_USER.id ? `${person.name} (you)` : person.name;
 
-  const content = (
-    <>
-      <View style={styles.identity}>
-        <Image
-          source={require('@/assets/icons/user-circle-24.svg')}
-          style={styles.icon}
-          tintColor={theme.text}
-        />
-        <Text style={[styles.name, { color: theme.text }]} numberOfLines={1}>
-          {name}
-        </Text>
-      </View>
-      <Image source={STATUS_ICONS[status]} style={styles.icon} tintColor={theme.text} />
-    </>
+  const statusIcon = (
+    <Image source={STATUS_ICONS[status]} style={styles.icon} tintColor={theme.text} />
   );
 
-  // Tappable rows are buttons, the rest are read as one item by screen readers
-  if (onPress) {
-    return (
-      <Pressable
-        onPress={onPress}
-        role="button"
-        accessibilityLabel={actionLabel ?? `${name}, ${STATUS_LABELS[status]}`}
-        style={({ pressed }) => [
-          styles.row,
-          { borderColor: theme.text },
-          pressed && styles.pressed,
-        ]}>
-        {content}
-      </Pressable>
-    );
-  }
-
   return (
-    <View
-      style={[styles.row, { borderColor: theme.text }]}
-      accessible
-      accessibilityLabel={`${name}, ${STATUS_LABELS[status]}`}>
-      {content}
-    </View>
+    <>
+      <Pressable
+        onPress={() => setProfileOpen(true)}
+        role="button"
+        accessibilityLabel={`${name}, ${STATUS_LABELS[status]}`}
+        accessibilityHint="Opens their profile"
+        style={({ pressed }) => [styles.row, { borderColor: theme.text }, pressed && styles.pressed]}>
+        <View style={styles.identity}>
+          <Avatar person={person} size={24} />
+          <Text style={[styles.name, { color: theme.text }]} numberOfLines={1}>
+            {name}
+          </Text>
+        </View>
+        {onPress ? (
+          <Pressable
+            onPress={onPress}
+            role="button"
+            accessibilityLabel={actionLabel ?? `${name}, ${STATUS_LABELS[status]}`}
+            hitSlop={12}
+            style={({ pressed }) => pressed && styles.pressed}>
+            {statusIcon}
+          </Pressable>
+        ) : (
+          statusIcon
+        )}
+      </Pressable>
+
+      <ProfileSheet person={person} visible={profileOpen} onClose={() => setProfileOpen(false)} />
+    </>
   );
 }
 

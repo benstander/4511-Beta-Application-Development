@@ -6,7 +6,8 @@ import { FormField } from '@/components/ui/form-field';
 import { SearchField } from '@/components/ui/search-field';
 import { FontFamily } from '@/constants/theme';
 import type { DraftFieldsProps } from '@/data/create-draft';
-import { FRIENDS, findFriend } from '@/data/people';
+import { useFriends } from '@/data/friends-store';
+import { findPerson } from '@/data/people';
 import { useTheme } from '@/hooks/use-theme';
 
 const SHORT_LIST = 3;
@@ -14,16 +15,19 @@ const SHORT_LIST = 3;
 // Search and list of friends to invite
 export function FriendInvites({ draft, onChange }: DraftFieldsProps) {
   const theme = useTheme();
+  const allFriends = useFriends();
   const [query, setQuery] = useState('');
   const [showAll, setShowAll] = useState(false);
 
   const q = query.trim().toLowerCase();
   const friends = q
-    ? FRIENDS.filter((person) => person.name.toLowerCase().includes(q))
+    ? allFriends.filter((person) => person.name.toLowerCase().includes(q))
     : showAll
-      ? FRIENDS
-      : FRIENDS.slice(0, SHORT_LIST);
-  const invited = draft.invitedIds.flatMap((id) => findFriend(id) ?? []);
+      ? allFriends
+      : allFriends.slice(0, SHORT_LIST);
+  const invited = draft.invitedIds
+    .map((id) => findPerson(id))
+    .filter((person) => person !== undefined);
 
   const toggle = (id: string) =>
     onChange({
@@ -57,7 +61,7 @@ export function FriendInvites({ draft, onChange }: DraftFieldsProps) {
           </Text>
         )}
         {/* Only show View all when not searching and there are more friends */}
-        {q === '' && FRIENDS.length > SHORT_LIST && (
+        {q === '' && allFriends.length > SHORT_LIST && (
           <Pressable
             onPress={() => setShowAll((all) => !all)}
             role="button"

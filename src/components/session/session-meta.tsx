@@ -1,6 +1,7 @@
 import { Image } from 'expo-image';
 import { StyleSheet, Text, View } from 'react-native';
 
+import { Avatar } from '@/components/ui/avatar';
 import { FontFamily } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import type { Session } from '@/types/session';
@@ -9,14 +10,18 @@ import { formatSessionTime } from '@/utils/format-session-time';
 const AVATAR_COUNT = 3;
 
 type SessionMetaProps = {
-  session: Pick<Session, 'startsAt' | 'endsAt' | 'location' | 'attendeeSummary'>;
+  session: Pick<
+    Session,
+    'startsAt' | 'endsAt' | 'location' | 'attendeeSummary' | 'attendees' | 'invited'
+  >;
   variant?: 'card' | 'detail';
 };
 
 // Time and place on the left, avatars and who's going on the right
 export function SessionMeta({ session, variant = 'card' }: SessionMetaProps) {
   const theme = useTheme();
-  const { startsAt, endsAt, location, attendeeSummary } = session;
+  const { startsAt, endsAt, location, attendeeSummary, attendees, invited = [] } = session;
+  const faces = [...attendees, ...invited].slice(0, AVATAR_COUNT);
   const wrap = variant === 'detail';
   const lines = wrap ? undefined : 1;
 
@@ -47,12 +52,16 @@ export function SessionMeta({ session, variant = 'card' }: SessionMetaProps) {
 
       <View style={styles.attendees}>
         <View style={styles.avatars}>
-          {Array.from({ length: AVATAR_COUNT }, (_, i) => (
-            <Image
-              key={i}
-              source={require('@/assets/icons/user-circle.svg')}
-              style={[styles.icon, i < AVATAR_COUNT - 1 && styles.avatarOverlap]}
-              tintColor={theme.text}
+          {faces.map((person, i) => (
+            <Avatar
+              key={person.id}
+              person={person}
+              size={18}
+              style={[
+                styles.face,
+                { borderColor: theme.background },
+                i < faces.length - 1 && styles.avatarOverlap,
+              ]}
             />
           ))}
         </View>
@@ -103,6 +112,9 @@ const styles = StyleSheet.create({
   },
   avatars: {
     flexDirection: 'row',
+  },
+  face: {
+    borderWidth: 1.5,
   },
   avatarOverlap: {
     marginRight: -6,

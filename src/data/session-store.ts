@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSyncExternalStore } from 'react';
 
 import type { SessionLevel } from '@/constants/theme';
-import { CURRENT_USER, findFriend } from '@/data/people';
+import { CURRENT_USER, findPerson } from '@/data/people';
 import { SAMPLE_SESSIONS, SPORT_IMAGES } from '@/data/sessions';
 import type { Coordinates, Person, Session, SessionType, Sport } from '@/types/session';
 
@@ -47,7 +47,9 @@ export function invitedSummary(invited: Person[]) {
 }
 
 function fromStored(stored: StoredSession): Session {
-  const invited = stored.invitedIds.flatMap((id) => findFriend(id) ?? []);
+  const invited = stored.invitedIds
+    .map((id) => findPerson(id))
+    .filter((person) => person !== undefined);
   return {
     id: stored.id,
     title: stored.title,

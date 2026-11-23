@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { BackButton } from '@/components/layout/back-button';
 import { MaxContentWidth, ScreenPadding, Spacing } from '@/constants/theme';
 import { useBottomTabInset } from '@/hooks/use-bottom-tab-inset';
 import { useTheme } from '@/hooks/use-theme';
@@ -20,13 +21,21 @@ import { useTheme } from '@/hooks/use-theme';
 type StepScreenProps = {
   title: string;
   showBack?: boolean;
+  headerBack?: boolean;
   centerTitle?: boolean;
   children: ReactNode;
-  footer: ReactNode;
+  footer?: ReactNode;
 };
 
 // Layout for each Create step
-export function StepScreen({ title, showBack, centerTitle, children, footer }: StepScreenProps) {
+export function StepScreen({
+  title,
+  showBack,
+  headerBack,
+  centerTitle,
+  children,
+  footer,
+}: StepScreenProps) {
   const theme = useTheme();
   const bottomTabInset = useBottomTabInset();
   const keyboardOpen = useKeyboardOpen();
@@ -43,6 +52,11 @@ export function StepScreen({ title, showBack, centerTitle, children, footer }: S
             keyboardShouldPersistTaps="handled"
             keyboardDismissMode="interactive"
             showsVerticalScrollIndicator={false}>
+            {headerBack && (
+              <View style={styles.backRow}>
+                <BackButton />
+              </View>
+            )}
             <Text
               role="heading"
               style={[styles.title, centerTitle && styles.titleCentered, { color: theme.text }]}>
@@ -124,6 +138,9 @@ const styles = StyleSheet.create({
     paddingTop: ScreenPadding,
     paddingBottom: Spacing.four,
     gap: Spacing.four,
+  },
+  backRow: {
+    flexDirection: 'row',
   },
   title: {
     fontSize: 32,

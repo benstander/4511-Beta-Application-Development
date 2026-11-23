@@ -27,6 +27,8 @@ export type Coordinates = {
 export type Person = {
   id: string;
   name: string;
+  avatarColor: string;
+  bio: string;
 };
 
 export type Session = {

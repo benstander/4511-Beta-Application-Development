@@ -4,7 +4,7 @@ import { SessionSummary } from '@/components/create/session-summary';
 import { StepScreen } from '@/components/layout/step-screen';
 import { Button } from '@/components/ui/button';
 import { draftToNewSession, useCreateDraft } from '@/data/create-draft';
-import { findFriend } from '@/data/people';
+import { findPerson } from '@/data/people';
 import { createSession } from '@/data/session-store';
 import { SPORT_IMAGES } from '@/data/sessions';
 
@@ -15,7 +15,9 @@ export default function CreateSummaryScreen() {
   // Can't skip the earlier steps so everything should be filled in
   if (!session) return null;
 
-  const invited = session.invitedIds.flatMap((id) => findFriend(id) ?? []);
+  const invited = session.invitedIds
+    .map((id) => findPerson(id))
+    .filter((person) => person !== undefined);
 
   const create = () => {
     const id = createSession(session);
