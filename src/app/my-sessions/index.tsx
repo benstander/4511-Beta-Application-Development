@@ -16,11 +16,12 @@ import {
 } from '@/data/session-filters';
 import { useMySessions } from '@/data/session-store';
 
-const TABS = ['Going', 'Created', 'History'] as const;
+const TABS = ['Going', 'Invited', 'Created', 'History'] as const;
 type Tab = (typeof TABS)[number];
 
 const EMPTY: Record<Tab, { message: string; actionLabel: string; href: '/' | '/create' }> = {
   Going: { message: 'Have not joined a session yet.', actionLabel: 'Find a session', href: '/' },
+  Invited: { message: 'No invites right now.', actionLabel: 'Find a session', href: '/' },
   Created: {
     message: 'Have not created a session yet.',
     actionLabel: 'Create a session',
@@ -45,9 +46,12 @@ export default function MySessionsScreen() {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const mySessions = useMySessions();
 
-  const inTab = { Going: mySessions.going, Created: mySessions.created, History: mySessions.history }[
-    tab
-  ];
+  const inTab = {
+    Going: mySessions.going,
+    Invited: mySessions.invited,
+    Created: mySessions.created,
+    History: mySessions.history,
+  }[tab];
   const sessions = applySessionFilters(inTab, filters);
   const filteredOut = inTab.length > 0 && sessions.length === 0;
   const empty = EMPTY[tab];
@@ -94,7 +98,12 @@ export default function MySessionsScreen() {
       <FilterSheet
         visible={filtersOpen}
         filters={filters}
-        sessions={[...mySessions.going, ...mySessions.created, ...mySessions.history]}
+        sessions={[
+          ...mySessions.going,
+          ...mySessions.invited,
+          ...mySessions.created,
+          ...mySessions.history,
+        ]}
         onClose={() => setFiltersOpen(false)}
         onApply={(next) => {
           setFilters(next);

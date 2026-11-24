@@ -7,10 +7,11 @@ import { SAMPLE_SESSIONS, SPORT_IMAGES } from '@/data/sessions';
 import type { Coordinates, Person, Session, SessionType, Sport } from '@/types/session';
 
 // Sessions shared by every screen: SAMPLE_SESSIONS plus ones you made in Create.
-// Joined ids and created sessions are saved in AsyncStorage so they stay after
-// closing the app
+// Joined ids, declined ids and created sessions are saved in AsyncStorage so they
+// stay after closing the app
 
 const JOINED_KEY = 'beta-app/joined-session-ids';
+const DECLINED_KEY = 'beta-app/declined-session-ids';
 const CREATED_KEY = 'beta-app/created-sessions';
 
 type StoredSession = {
@@ -25,8 +26,46 @@ type StoredSession = {
   coordinates?: Coordinates;
   description: string;
   invitedIds: string[];
+  acceptedIds?: string[];
+  declinedIds?: string[];
   photoUri: string | null;
 };
+
+const EXAMPLE_CREATED: StoredSession[] = [
+  {
+    id: 'created-example-soccer',
+    title: 'Sunday soccer',
+    sport: 'Soccer',
+    level: 'social',
+    type: 'Friends-only',
+    startsAt: new Date(2027, 10, 14, 9, 0).toISOString(),
+    endsAt: new Date(2027, 10, 14, 11, 0).toISOString(),
+    location: 'Fred Caterson, Castle Hill',
+    coordinates: { latitude: -33.71835, longitude: 150.98357 },
+    description:
+      'Relaxed Sunday morning game with the usual crew. Bring a light and a dark shirt so we can split teams.',
+    invitedIds: ['alex', 'john', 'james', 'carter', 'sarah'],
+    acceptedIds: ['alex', 'john'],
+    declinedIds: ['sarah'],
+    photoUri: null,
+  },
+  {
+    id: 'created-example-run',
+    title: 'Evening run club',
+    sport: 'Running',
+    level: 'beginner',
+    type: 'Invite-only',
+    startsAt: new Date(2027, 10, 18, 18, 0).toISOString(),
+    endsAt: new Date(2027, 10, 18, 19, 0).toISOString(),
+    location: 'Samantha riley dr, Kellyville',
+    coordinates: { latitude: -33.71005, longitude: 150.93852 },
+    description: 'An easy 6km loop after work, chatting pace. Everyone runs together.',
+    invitedIds: ['priya', 'george', 'jason'],
+    acceptedIds: ['priya'],
+    declinedIds: ['jason'],
+    photoUri: null,
+  },
+];
 
 export type NewSession = Omit<StoredSession, 'id' | 'startsAt' | 'endsAt'> & {
   startsAt: Date;
@@ -35,6 +74,7 @@ export type NewSession = Omit<StoredSession, 'id' | 'startsAt' | 'endsAt'> & {
 
 type State = {
   joinedIds: Set<string>;
+  declinedIds: Set<string>;
   created: StoredSession[];
   sessions: Session[];
 };
@@ -46,10 +86,22 @@ export function invitedSummary(invited: Person[]) {
   return `${invited[0].name} + ${invited.length - 1} invited`;
 }
 
+// "Alex is going" if anyone accepted, otherwise who's invited
+function createdSummary(accepted: Person[], waiting: Person[]) {
+  if (accepted.length === 0) return invitedSummary(waiting);
+  if (accepted.length === 1) return `${accepted[0].name} is going`;
+  return `${accepted[0].name} + ${accepted.length - 1} going`;
+}
+
+// Turn ids back into people, skipping any that don't exist
+function people(ids: string[] = []) {
+  return ids.map((id) => findPerson(id)).filter((person) => person !== undefined);
+}
+
 function fromStored(stored: StoredSession): Session {
-  const invited = stored.invitedIds
-    .map((id) => findPerson(id))
-    .filter((person) => person !== undefined);
+  const answered = new Set([...(stored.acceptedIds ?? []), ...(stored.declinedIds ?? [])]);
+  const accepted = people(stored.acceptedIds);
+  const invited = people(stored.invitedIds.filter((id) => !answered.has(id)));
   return {
     id: stored.id,
     title: stored.title,
@@ -63,27 +115,40 @@ function fromStored(stored: StoredSession): Session {
     coordinates: stored.coordinates,
     description: stored.description,
     creator: CURRENT_USER,
-    attendees: [CURRENT_USER],
+    attendees: [CURRENT_USER, ...accepted],
     invited,
-    attendeeSummary: invitedSummary(invited),
+    declined: people(stored.declinedIds),
+    attendeeSummary: createdSummary(accepted, invited),
   };
 }
 
-function buildState(joinedIds: Set<string>, created: StoredSession[]): State {
+// Take you off the invited list once you've answered (and add you if you said yes)
+function withMyResponse(session: Session, joined: boolean, declined: boolean): Session {
+  if (!joined && !declined) return session;
+  const invited = session.invited?.filter((person) => person.id !== CURRENT_USER.id);
+  return joined
+    ? { ...session, invited, attendees: [...session.attendees, CURRENT_USER] }
+    : { ...session, invited };
+}
+
+function buildState(
+  joinedIds: Set<string>,
+  declinedIds: Set<string>,
+  created: StoredSession[]
+): State {
   const samples = SAMPLE_SESSIONS.map((session) =>
-    joinedIds.has(session.id)
-      ? { ...session, attendees: [...session.attendees, CURRENT_USER] }
-      : session
+    withMyResponse(session, joinedIds.has(session.id), declinedIds.has(session.id))
   );
   return {
     joinedIds,
+    declinedIds,
     created,
     // Created sessions first, then the samples
     sessions: [...created.map(fromStored), ...samples],
   };
 }
 
-let state = buildState(new Set(), []);
+let state = buildState(new Set(), new Set(), []);
 let hydrated = false;
 const listeners = new Set<() => void>();
 
@@ -104,14 +169,15 @@ function save(key: string, value: unknown) {
   );
 }
 
-function setJoinedIds(joinedIds: Set<string>) {
-  state = buildState(joinedIds, state.created);
+function setResponses(joinedIds: Set<string>, declinedIds: Set<string>) {
+  state = buildState(joinedIds, declinedIds, state.created);
   emit();
   save(JOINED_KEY, [...joinedIds]);
+  save(DECLINED_KEY, [...declinedIds]);
 }
 
 function setCreated(created: StoredSession[]) {
-  state = buildState(state.joinedIds, created);
+  state = buildState(state.joinedIds, state.declinedIds, created);
   emit();
   save(CREATED_KEY, created);
 }
@@ -132,12 +198,13 @@ export function hydrateSessionStore() {
   if (hydratePromise) return hydratePromise;
   hydratePromise = Promise.all([
     AsyncStorage.getItem(JOINED_KEY),
+    AsyncStorage.getItem(DECLINED_KEY),
     AsyncStorage.getItem(CREATED_KEY),
   ])
-    .then(([joinedRaw, createdRaw]) => {
-      const joined = parseList(joinedRaw).filter((id) => typeof id === 'string');
-      const created = parseList(createdRaw) as StoredSession[];
-      state = buildState(new Set(joined), created);
+    .then(([joinedRaw, declinedRaw, createdRaw]) => {
+      const ids = (raw: string | null) => parseList(raw).filter((id) => typeof id === 'string');
+      const created = createdRaw ? (parseList(createdRaw) as StoredSession[]) : EXAMPLE_CREATED;
+      state = buildState(new Set(ids(joinedRaw)), new Set(ids(declinedRaw)), created);
     })
     .catch((error) => console.warn('Could not load saved sessions', error))
     .finally(() => {
@@ -172,20 +239,36 @@ export function isAttending(session: Session, personId = CURRENT_USER.id) {
   return session.attendees.some((person) => person.id === personId);
 }
 
-export function isCreator(session: Session, personId = CURRENT_USER.id) {
+export function isCreator(session: Pick<Session, 'creator'>, personId = CURRENT_USER.id) {
   return session.creator.id === personId;
 }
 
+// Invited and haven't answered yet?
+export function isInvited(session: Session, personId = CURRENT_USER.id) {
+  return (session.invited ?? []).some((person) => person.id === personId);
+}
+
+function without(ids: Set<string>, id: string) {
+  const next = new Set(ids);
+  next.delete(id);
+  return next;
+}
+
+// Join a session or accept an invite
 export function joinSession(id: string) {
   if (state.joinedIds.has(id)) return;
-  setJoinedIds(new Set([...state.joinedIds, id]));
+  setResponses(new Set([...state.joinedIds, id]), without(state.declinedIds, id));
+}
+
+// Decline an invite
+export function declineSession(id: string) {
+  if (state.declinedIds.has(id)) return;
+  setResponses(without(state.joinedIds, id), new Set([...state.declinedIds, id]));
 }
 
 export function leaveSession(id: string) {
   if (!state.joinedIds.has(id)) return;
-  const next = new Set(state.joinedIds);
-  next.delete(id);
-  setJoinedIds(next);
+  setResponses(without(state.joinedIds, id), state.declinedIds);
 }
 
 function toStored(id: string, { startsAt, endsAt, ...rest }: NewSession): StoredSession {
@@ -205,9 +288,20 @@ export function createSession(input: NewSession) {
   return id;
 }
 
-// Update a session you made
+// Update a session you made, keeping replies from people still invited
 export function updateSession(id: string, input: NewSession) {
-  setCreated(state.created.map((session) => (session.id === id ? toStored(id, input) : session)));
+  const stillInvited = (ids?: string[]) => ids?.filter((x) => input.invitedIds.includes(x));
+  setCreated(
+    state.created.map((session) =>
+      session.id === id
+        ? {
+            ...toStored(id, input),
+            acceptedIds: stillInvited(session.acceptedIds),
+            declinedIds: stillInvited(session.declinedIds),
+          }
+        : session
+    )
+  );
 }
 
 export function deleteSession(id: string) {
@@ -220,5 +314,6 @@ export function useMySessions(now = new Date()) {
   const going = sessions.filter((s) => isAttending(s) && s.endsAt >= now);
   const history = sessions.filter((s) => isAttending(s) && s.endsAt < now);
   const created = sessions.filter((s) => isCreator(s));
-  return { going, created, history };
+  const invited = sessions.filter((s) => isInvited(s) && s.endsAt >= now);
+  return { going, invited, created, history };
 }

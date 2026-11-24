@@ -1,4 +1,4 @@
-import { PEOPLE } from '@/data/people';
+import { CURRENT_USER, PEOPLE } from '@/data/people';
 import { SPORTS, type Session, type Sport } from '@/types/session';
 
 // Fake sessions for now
@@ -45,6 +45,7 @@ export const SAMPLE_SESSIONS: Session[] = [
       "Casual kick-around at Fred Caterson this weekend. All skill levels welcome, we'll split into even teams and swap around. Bring water and boots if you have them.",
     creator: PEOPLE.george,
     attendees: [PEOPLE.george, PEOPLE.sarah, PEOPLE.priya],
+    invited: [PEOPLE.james],
     attendeeSummary: '2 friends',
   },
   {
@@ -145,6 +146,7 @@ export const SAMPLE_SESSIONS: Session[] = [
       "Casual half-court games after work. We'll rotate teams so everyone gets plenty of court time. Bring a ball if you have one.",
     creator: PEOPLE.jason,
     attendees: [PEOPLE.jason, PEOPLE.john],
+    invited: [CURRENT_USER, PEOPLE.carter],
     attendeeSummary: 'John is going',
   },
   {
@@ -179,6 +181,7 @@ export const SAMPLE_SESSIONS: Session[] = [
       "Friendly doubles on two booked courts. We'll mix up partners every set. Racquets available to borrow if you don't have one.",
     creator: PEOPLE.priya,
     attendees: [PEOPLE.priya, PEOPLE.sarah],
+    invited: [CURRENT_USER],
     attendeeSummary: 'Sarah is going',
   },
   {

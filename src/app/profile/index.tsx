@@ -26,7 +26,7 @@ export default function ProfileScreen() {
               role="button"
               style={({ pressed }) => [
                 styles.card,
-                { borderColor: theme.text },
+                { backgroundColor: theme.backgroundElement },
                 pressed && styles.pressed,
               ]}>
               <Text style={[styles.cardText, { color: theme.text }]}>Edit profile</Text>
@@ -39,7 +39,7 @@ export default function ProfileScreen() {
               accessibilityLabel={`Friends, ${friends.length}`}
               style={({ pressed }) => [
                 styles.card,
-                { borderColor: theme.text },
+                { backgroundColor: theme.backgroundElement },
                 pressed && styles.pressed,
               ]}>
               <Text style={[styles.cardText, { color: theme.text }]}>Friends</Text>
@@ -64,8 +64,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   card: {
-    height: 56,
-    borderWidth: 1.5,
+    height: 60,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',

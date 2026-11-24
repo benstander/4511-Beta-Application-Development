@@ -4,31 +4,40 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { ProfileSheet } from '@/components/profile/profile-sheet';
 import { Avatar } from '@/components/ui/avatar';
-import { FontFamily } from '@/constants/theme';
+import { FontFamily, Palette } from '@/constants/theme';
 import { useCurrentUser } from '@/data/profile-store';
 import { useTheme } from '@/hooks/use-theme';
 import type { Person } from '@/types/session';
 
-// Icon on the right: going = tick, invited = clock, add = plus
-export type PersonStatus = 'going' | 'invited' | 'add';
+// Icon on the right: going = tick, invited = clock, declined = x, add = plus
+export type PersonStatus = 'going' | 'invited' | 'declined' | 'add';
 
 const STATUS_ICONS: Record<PersonStatus, number> = {
   going: require('@/assets/icons/check-circle.svg'),
   invited: require('@/assets/icons/clock-24.svg'),
+  declined: require('@/assets/icons/x-circle-solid.svg'),
   add: require('@/assets/icons/plus-circle.svg'),
 };
 
 const STATUS_LABELS: Record<PersonStatus, string> = {
   going: 'going',
   invited: 'invited',
+  declined: 'declined',
   add: 'not invited',
+};
+
+const TINTED_ICONS: Partial<Record<PersonStatus, { icon: number; color: string }>> = {
+  going: { icon: require('@/assets/icons/check-circle-solid.svg'), color: Palette.success },
+  invited: { icon: require('@/assets/icons/clock-solid.svg'), color: Palette.pending },
+  declined: { icon: require('@/assets/icons/x-circle-solid.svg'), color: Palette.destructive },
 };
 
 type PersonRowProps = {
   person: Person;
-  status?: PersonStatus;
+  status?: PersonStatus | null;
   onPress?: () => void;
   actionLabel?: string;
+  tinted?: boolean;
 };
 
 // Tap the row to see their profile, tap the icon to invite or remove
@@ -37,6 +46,7 @@ export function PersonRow({
   status = 'going',
   onPress,
   actionLabel,
+  tinted,
 }: PersonRowProps) {
   const theme = useTheme();
   const me = useCurrentUser();
@@ -45,8 +55,14 @@ export function PersonRow({
   const person = isYou ? me : listed;
   const name = isYou ? `${person.name} (you)` : person.name;
 
-  const statusIcon = (
-    <Image source={STATUS_ICONS[status]} style={styles.icon} tintColor={theme.text} />
+  const label = status ? `${name}, ${STATUS_LABELS[status]}` : name;
+  const tint = tinted && status ? TINTED_ICONS[status] : undefined;
+  const statusIcon = status && (
+    <Image
+      source={tint?.icon ?? STATUS_ICONS[status]}
+      style={styles.icon}
+      tintColor={tint?.color ?? theme.text}
+    />
   );
 
   return (
@@ -54,9 +70,13 @@ export function PersonRow({
       <Pressable
         onPress={() => setProfileOpen(true)}
         role="button"
-        accessibilityLabel={`${name}, ${STATUS_LABELS[status]}`}
+        accessibilityLabel={label}
         accessibilityHint="Opens their profile"
-        style={({ pressed }) => [styles.row, { borderColor: theme.text }, pressed && styles.pressed]}>
+        style={({ pressed }) => [
+          styles.row,
+          { backgroundColor: theme.backgroundElement },
+          pressed && styles.pressed,
+        ]}>
         <View style={styles.identity}>
           <Avatar person={person} size={24} />
           <Text style={[styles.name, { color: theme.text }]} numberOfLines={1}>
@@ -67,7 +87,7 @@ export function PersonRow({
           <Pressable
             onPress={onPress}
             role="button"
-            accessibilityLabel={actionLabel ?? `${name}, ${STATUS_LABELS[status]}`}
+            accessibilityLabel={actionLabel ?? label}
             hitSlop={12}
             style={({ pressed }) => pressed && styles.pressed}>
             {statusIcon}
@@ -85,16 +105,21 @@ export function PersonRow({
 type PersonListProps = {
   people: Person[];
   invited?: Person[];
+  declined?: Person[];
 };
 
-export function PersonList({ people, invited = [] }: PersonListProps) {
+// Going first, then invited, then declined
+export function PersonList({ people, invited = [], declined = [] }: PersonListProps) {
   return (
     <View style={styles.list}>
       {people.map((person) => (
-        <PersonRow key={person.id} person={person} />
+        <PersonRow key={person.id} person={person} tinted />
       ))}
       {invited.map((person) => (
-        <PersonRow key={person.id} person={person} status="invited" />
+        <PersonRow key={person.id} person={person} status="invited" tinted />
+      ))}
+      {declined.map((person) => (
+        <PersonRow key={person.id} person={person} status="declined" tinted />
       ))}
     </View>
   );
@@ -105,8 +130,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   row: {
-    height: 52,
-    borderWidth: 1.5,
+    height: 60,
     borderRadius: 12,
     paddingHorizontal: 16,
     flexDirection: 'row',

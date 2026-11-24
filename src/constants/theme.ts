@@ -38,6 +38,8 @@ export const Colors = {
 export const Palette = {
   primary: '#0051FF',
   destructive: '#D10000',
+  success: '#169300',
+  pending: '#E07A00',
   onColor: '#FFFFFF',
   overlay: 'rgba(0, 0, 0, 0.4)',
 } as const;

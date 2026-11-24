@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { Avatar } from '@/components/ui/avatar';
 import { FontFamily } from '@/constants/theme';
+import { isCreator } from '@/data/session-store';
 import { useTheme } from '@/hooks/use-theme';
 import type { Session } from '@/types/session';
 import { formatSessionTime } from '@/utils/format-session-time';
@@ -12,7 +13,7 @@ const AVATAR_COUNT = 3;
 type SessionMetaProps = {
   session: Pick<
     Session,
-    'startsAt' | 'endsAt' | 'location' | 'attendeeSummary' | 'attendees' | 'invited'
+    'startsAt' | 'endsAt' | 'location' | 'attendeeSummary' | 'attendees' | 'invited' | 'creator'
   >;
   variant?: 'card' | 'detail';
 };
@@ -21,7 +22,10 @@ type SessionMetaProps = {
 export function SessionMeta({ session, variant = 'card' }: SessionMetaProps) {
   const theme = useTheme();
   const { startsAt, endsAt, location, attendeeSummary, attendees, invited = [] } = session;
-  const faces = [...attendees, ...invited].slice(0, AVATAR_COUNT);
+  const faces = (isCreator(session) ? [...attendees, ...invited] : attendees).slice(
+    0,
+    AVATAR_COUNT
+  );
   const wrap = variant === 'detail';
   const lines = wrap ? undefined : 1;
 

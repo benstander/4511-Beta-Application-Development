@@ -12,9 +12,11 @@ import { SessionHeader } from '@/components/session/session-header';
 import { SessionMap } from '@/components/session/session-map';
 import { FontFamily, MaxContentWidth, ScreenPadding } from '@/constants/theme';
 import {
+  declineSession,
   deleteSession,
   isAttending,
   isCreator,
+  isInvited,
   joinSession,
   leaveSession,
   useSession,
@@ -47,6 +49,8 @@ export default function SessionDetailScreen() {
 
   const going = isAttending(session);
   const mine = isCreator(session);
+  const invitedMe = isInvited(session);
+  const notGoing = (session.invited?.length ?? 0) + (session.declined?.length ?? 0);
 
   const editSession = () =>
     router.push(
@@ -81,12 +85,19 @@ export default function SessionDetailScreen() {
             )}
 
             <DetailSection title="Session creator">
-              <PersonRow person={session.creator} />
+              <PersonRow person={session.creator} status={null} />
             </DetailSection>
 
             <DetailSection title="Attendee list">
-              <PersonList people={session.attendees} invited={session.invited} />
+              <PersonList people={session.attendees} />
             </DetailSection>
+
+            {/* Only the creator sees who's invited */}
+            {mine && notGoing > 0 && (
+              <DetailSection title="Invited">
+                <PersonList people={[]} invited={session.invited} declined={session.declined} />
+              </DetailSection>
+            )}
 
             {/* Creator can delete, attendees can leave */}
             {mine ? (
@@ -107,10 +118,20 @@ export default function SessionDetailScreen() {
           </View>
         </ScrollView>
 
-        {/* Edit if it's yours, otherwise Join or Going */}
+        {/* Edit if it's yours, Decline/Accept if you're invited, otherwise Join or Going */}
         <View style={[styles.footer, { paddingBottom: bottomTabInset + 16 }]}>
           {mine ? (
             <Button label="Edit session" onPress={editSession} />
+          ) : invitedMe ? (
+            <View style={styles.responseRow}>
+              <Button
+                label="Decline"
+                variant="destructive"
+                flex
+                onPress={() => declineSession(session.id)}
+              />
+              <Button label="Accept" flex onPress={() => joinSession(session.id)} />
+            </View>
           ) : going ? (
             <Button label="Going" icon={require('@/assets/icons/check-badge.svg')} />
           ) : (
@@ -181,6 +202,10 @@ const styles = StyleSheet.create({
     gap: 8,
     paddingHorizontal: ScreenPadding,
     paddingTop: 12,
+  },
+  responseRow: {
+    flexDirection: 'row',
+    gap: 8,
   },
   notFound: {
     flex: 1,

@@ -14,6 +14,17 @@ export function hasInvites(type: SessionType | null) {
   return type !== 'Solo';
 }
 
+// Invite-only needs at least one person invited
+export function invitesRequired(type: SessionType | null) {
+  return type === 'Invite-only';
+}
+
+export const INVITE_HINTS: Partial<Record<SessionType, string>> = {
+  Public: 'Anyone can join. Invite friends to let them know.',
+  'Friends-only': 'All your friends can join. Invite some to give them a nudge.',
+  'Invite-only': 'Only people you invite will see this session.',
+};
+
 export type CreateDraft = {
   title: string;
   type: SessionType | null;
@@ -103,11 +114,17 @@ export function draftFromSession(session: Session): CreateDraft {
     // Location already has the suburb in it
     place: coordinates ? { name: session.location, area: '', ...coordinates } : null,
     description: session.description,
-    invitedIds: (session.invited ?? []).map((person) => person.id),
+    // Everyone invited, whether they said yes, no or haven't answered
+    invitedIds: [
+      ...session.attendees.filter((person) => person.id !== session.creator.id),
+      ...(session.invited ?? []),
+      ...(session.declined ?? []),
+    ].map((person) => person.id),
   };
 }
 
 // Turns the draft into a session, or null if something's missing
+// (Invite-only also needs someone invited)
 export function draftToNewSession(d: CreateDraft): NewSession | null {
   const { type, sport, level, date, startMinutes, endMinutes, place } = d;
   if (
@@ -119,7 +136,8 @@ export function draftToNewSession(d: CreateDraft): NewSession | null {
     endMinutes === null ||
     !place ||
     d.title.trim() === '' ||
-    d.description.trim() === ''
+    d.description.trim() === '' ||
+    (invitesRequired(type) && d.invitedIds.length === 0)
   ) {
     return null;
   }

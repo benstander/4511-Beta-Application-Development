@@ -39,7 +39,7 @@ export function ProfileSheet({ person, visible, onClose }: ProfileSheetProps) {
             role="button"
             style={({ pressed }) => [
               styles.card,
-              { borderColor: theme.text },
+              { backgroundColor: theme.backgroundElement },
               pressed && styles.pressed,
             ]}>
             <Text style={[styles.cardText, { color: theme.text }]}>
@@ -69,8 +69,7 @@ const styles = StyleSheet.create({
     gap: 40,
   },
   card: {
-    height: 56,
-    borderWidth: 1.5,
+    height: 60,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',

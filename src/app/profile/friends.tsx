@@ -6,14 +6,14 @@ import { PersonRow } from '@/components/session/person-row';
 import { FormField } from '@/components/ui/form-field';
 import { SearchField } from '@/components/ui/search-field';
 import { FontFamily } from '@/constants/theme';
-import { addFriend, isFriend, removeFriend, useFriends } from '@/data/friends-store';
+import { addFriend, isFriend, useFriends } from '@/data/friends-store';
 import { USERS } from '@/data/people';
 import { useTheme } from '@/hooks/use-theme';
 import type { Person } from '@/types/session';
 
 const SUGGESTIONS = 3;
 
-// Your friends and a search to add more people
+// Your friends and a search to add more people. Tap someone to see their profile
 export default function FriendsScreen() {
   const theme = useTheme();
   const friends = useFriends();
@@ -23,18 +23,18 @@ export default function FriendsScreen() {
   const results = USERS.filter((person) => person.name.toLowerCase().includes(q));
   const suggestions = USERS.filter((person) => !isFriend(friends, person.id)).slice(0, SUGGESTIONS);
 
-  const row = (person: Person) => {
-    const added = isFriend(friends, person.id);
-    return (
+  const row = (person: Person) =>
+    isFriend(friends, person.id) ? (
+      <PersonRow key={person.id} person={person} status={null} />
+    ) : (
       <PersonRow
         key={person.id}
         person={person}
-        status={added ? 'going' : 'add'}
-        onPress={() => (added ? removeFriend(person.id) : addFriend(person.id))}
-        actionLabel={added ? `${person.name}, friend. Tap to remove` : `Add ${person.name}`}
+        status="add"
+        onPress={() => addFriend(person.id)}
+        actionLabel={`Add ${person.name}`}
       />
     );
-  };
 
   return (
     <StepScreen
@@ -55,7 +55,7 @@ export default function FriendsScreen() {
         </FormField>
       ) : (
         <>
-          <FormField label={`Your friends (${friends.length})`}>
+          <FormField label="Your friends">
             <View style={styles.list}>{friends.map(row)}</View>
             {friends.length === 0 && (
               <Text style={[styles.empty, { color: theme.textSecondary }]}>
