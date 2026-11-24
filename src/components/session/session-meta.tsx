@@ -3,29 +3,23 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { Avatar } from '@/components/ui/avatar';
 import { FontFamily } from '@/constants/theme';
-import { isCreator } from '@/data/session-store';
+import { useFriends } from '@/data/friends-store';
 import { useTheme } from '@/hooks/use-theme';
 import type { Session } from '@/types/session';
+import { attendeeSummary } from '@/utils/attendee-summary';
 import { formatSessionTime } from '@/utils/format-session-time';
 
-const AVATAR_COUNT = 3;
-
 type SessionMetaProps = {
-  session: Pick<
-    Session,
-    'startsAt' | 'endsAt' | 'location' | 'attendeeSummary' | 'attendees' | 'invited' | 'creator'
-  >;
+  session: Pick<Session, 'startsAt' | 'endsAt' | 'location' | 'attendees'>;
   variant?: 'card' | 'detail';
 };
 
 // Time and place on the left, avatars and who's going on the right
 export function SessionMeta({ session, variant = 'card' }: SessionMetaProps) {
   const theme = useTheme();
-  const { startsAt, endsAt, location, attendeeSummary, attendees, invited = [] } = session;
-  const faces = (isCreator(session) ? [...attendees, ...invited] : attendees).slice(
-    0,
-    AVATAR_COUNT
-  );
+  const friends = useFriends();
+  const { startsAt, endsAt, location, attendees } = session;
+  const { faces, text } = attendeeSummary(attendees, new Set(friends.map((friend) => friend.id)));
   const wrap = variant === 'detail';
   const lines = wrap ? undefined : 1;
 
@@ -70,7 +64,7 @@ export function SessionMeta({ session, variant = 'card' }: SessionMetaProps) {
           ))}
         </View>
         <Text style={[styles.text, styles.summary, { color: theme.text }]} numberOfLines={1}>
-          {attendeeSummary}
+          {text}
         </Text>
       </View>
     </View>

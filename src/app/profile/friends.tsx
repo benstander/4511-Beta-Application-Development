@@ -37,9 +37,7 @@ export default function FriendsScreen() {
     );
 
   return (
-    <StepScreen
-      title="Friends"
-      headerBack>
+    <StepScreen title="Friends" headerBack>
       <FormField label="Search">
         <SearchField value={query} onChangeText={setQuery} placeholder="Find someone...." />
       </FormField>

@@ -47,5 +47,4 @@ export type Session = {
   invited?: Person[];
   declined?: Person[];
   type?: SessionType;
-  attendeeSummary: string;
 };

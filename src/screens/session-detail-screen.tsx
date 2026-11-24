@@ -11,6 +11,8 @@ import { PersonList, PersonRow } from '@/components/session/person-row';
 import { SessionHeader } from '@/components/session/session-header';
 import { SessionMap } from '@/components/session/session-map';
 import { FontFamily, MaxContentWidth, ScreenPadding } from '@/constants/theme';
+import { isFriend, useFriends } from '@/data/friends-store';
+import { CURRENT_USER } from '@/data/people';
 import {
   declineSession,
   deleteSession,
@@ -32,6 +34,7 @@ export default function SessionDetailScreen() {
   const bottomTabInset = useBottomTabInset();
   const [confirmingLeave, setConfirmingLeave] = useState(false);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const friends = useFriends();
 
   // Session might have been deleted
   if (!session) {
@@ -51,6 +54,10 @@ export default function SessionDetailScreen() {
   const mine = isCreator(session);
   const invitedMe = isInvited(session);
   const notGoing = (session.invited?.length ?? 0) + (session.declined?.length ?? 0);
+  const friendsGoing = session.attendees.filter((person) => isFriend(friends, person.id));
+  const attendees = [...session.attendees].sort(
+    (a, b) => Number(b.id === CURRENT_USER.id) - Number(a.id === CURRENT_USER.id)
+  );
 
   const editSession = () =>
     router.push(
@@ -88,8 +95,14 @@ export default function SessionDetailScreen() {
               <PersonRow person={session.creator} status={null} />
             </DetailSection>
 
+            {friendsGoing.length > 0 && (
+              <DetailSection title="Friends going">
+                <PersonList people={friendsGoing} />
+              </DetailSection>
+            )}
+
             <DetailSection title="Attendee list">
-              <PersonList people={session.attendees} />
+              <PersonList people={attendees} />
             </DetailSection>
 
             {/* Only the creator sees who's invited */}

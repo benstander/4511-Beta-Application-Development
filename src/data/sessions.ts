@@ -46,7 +46,6 @@ export const SAMPLE_SESSIONS: Session[] = [
     creator: PEOPLE.george,
     attendees: [PEOPLE.george, PEOPLE.sarah, PEOPLE.priya],
     invited: [PEOPLE.james],
-    attendeeSummary: '2 friends',
   },
   {
     id: 'gym-session',
@@ -62,7 +61,6 @@ export const SAMPLE_SESSIONS: Session[] = [
       "Who's keen for a gym session together this week? It'll be way more fun with the crew, and we'll push each other further than we ever would solo. Come along, we'll smash a workout, have a laugh, and grab food after.",
     creator: PEOPLE.jason,
     attendees: [PEOPLE.jason, PEOPLE.george, PEOPLE.alex, PEOPLE.john],
-    attendeeSummary: 'John is going',
   },
   {
     id: '5km-run',
@@ -78,7 +76,6 @@ export const SAMPLE_SESSIONS: Session[] = [
       'Easy-paced 5km before work. We stick together the whole way, so it is perfect if you are just getting into running. Coffee afterwards for anyone keen.',
     creator: PEOPLE.john,
     attendees: [PEOPLE.john, PEOPLE.alex],
-    attendeeSummary: 'John + 1 going',
   },
 
   // --- Gym / Running / Soccer (reuse photos) ---
@@ -96,7 +93,6 @@ export const SAMPLE_SESSIONS: Session[] = [
       "First time doing a proper leg day? Same. We'll go through squats, lunges and deadlifts with light weights and focus on form. No pressure, just good company.",
     creator: PEOPLE.alex,
     attendees: [PEOPLE.alex, PEOPLE.priya],
-    attendeeSummary: 'Alex is going',
   },
   {
     id: 'saturday-parkrun',
@@ -112,7 +108,6 @@ export const SAMPLE_SESSIONS: Session[] = [
       'Weekly 5km parkrun. Run, jog or walk it, everyone finishes together at the end. Breakfast at the cafe across the road afterwards.',
     creator: PEOPLE.sarah,
     attendees: [PEOPLE.sarah, PEOPLE.george, PEOPLE.john],
-    attendeeSummary: 'John + 2 going',
   },
   {
     id: 'futsal',
@@ -128,7 +123,6 @@ export const SAMPLE_SESSIONS: Session[] = [
       'Fast-paced indoor 5-a-side. We need one more to fill the team for the league game, so come ready to run. Indoor shoes only.',
     creator: PEOPLE.john,
     attendees: [PEOPLE.john, PEOPLE.jason, PEOPLE.alex, PEOPLE.george],
-    attendeeSummary: '3 friends',
   },
 
   // --- Basketball ---
@@ -147,7 +141,6 @@ export const SAMPLE_SESSIONS: Session[] = [
     creator: PEOPLE.jason,
     attendees: [PEOPLE.jason, PEOPLE.john],
     invited: [CURRENT_USER, PEOPLE.carter],
-    attendeeSummary: 'John is going',
   },
   {
     id: '3x3-tournament',
@@ -163,7 +156,6 @@ export const SAMPLE_SESSIONS: Session[] = [
       'Entering a team in the local 3x3 tournament. Looking for one more player who can shoot. Games are 10 minutes each, first to 21.',
     creator: PEOPLE.george,
     attendees: [PEOPLE.george, PEOPLE.alex],
-    attendeeSummary: 'Alex is going',
   },
 
   // --- Tennis ---
@@ -182,7 +174,6 @@ export const SAMPLE_SESSIONS: Session[] = [
     creator: PEOPLE.priya,
     attendees: [PEOPLE.priya, PEOPLE.sarah],
     invited: [CURRENT_USER],
-    attendeeSummary: 'Sarah is going',
   },
   {
     id: 'beginner-tennis',
@@ -198,7 +189,6 @@ export const SAMPLE_SESSIONS: Session[] = [
       "Never played before? Perfect. We'll practise forehands, backhands and serves before a few relaxed games.",
     creator: PEOPLE.alex,
     attendees: [PEOPLE.alex],
-    attendeeSummary: 'Alex is going',
   },
 
   // --- Swimming ---
@@ -216,7 +206,6 @@ export const SAMPLE_SESSIONS: Session[] = [
       "Steady laps in the slow lane before work. Swim at your own pace, we'll meet in the cafe for a coffee after.",
     creator: PEOPLE.sarah,
     attendees: [PEOPLE.sarah, PEOPLE.priya],
-    attendeeSummary: '2 friends',
   },
   {
     id: 'ocean-swim',
@@ -232,7 +221,6 @@ export const SAMPLE_SESSIONS: Session[] = [
       'Shelly Beach to Manly and back, about 2km. Strong swimmers only, and we always swim in a group. Wetsuits recommended.',
     creator: PEOPLE.john,
     attendees: [PEOPLE.john, PEOPLE.jason, PEOPLE.george],
-    attendeeSummary: 'John + 2 going',
   },
 
   // --- Cycling ---
@@ -250,7 +238,6 @@ export const SAMPLE_SESSIONS: Session[] = [
       "60km loop out to Windsor and back at a solid pace. We'll regroup at the top of each climb. Road bike and helmet required.",
     creator: PEOPLE.george,
     attendees: [PEOPLE.george, PEOPLE.alex, PEOPLE.jason],
-    attendeeSummary: '2 friends',
   },
   {
     id: 'cafe-ride',
@@ -266,7 +253,6 @@ export const SAMPLE_SESSIONS: Session[] = [
       'Easy 20km ride along the river with a long stop for coffee and pastries. Any bike is fine.',
     creator: PEOPLE.priya,
     attendees: [PEOPLE.priya, PEOPLE.sarah, PEOPLE.john],
-    attendeeSummary: 'John + 1 going',
   },
 
   // --- Climbing ---
@@ -284,6 +270,5 @@ export const SAMPLE_SESSIONS: Session[] = [
       "Indoor bouldering with the crew. We'll work through problems together and cheer each other on. Shoe hire available at the front desk.",
     creator: PEOPLE.alex,
     attendees: [PEOPLE.alex, PEOPLE.jason, PEOPLE.george, PEOPLE.john],
-    attendeeSummary: '3 friends',
   },
 ];

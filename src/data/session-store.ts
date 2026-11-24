@@ -4,7 +4,7 @@ import { useSyncExternalStore } from 'react';
 import type { SessionLevel } from '@/constants/theme';
 import { CURRENT_USER, findPerson } from '@/data/people';
 import { SAMPLE_SESSIONS, SPORT_IMAGES } from '@/data/sessions';
-import type { Coordinates, Person, Session, SessionType, Sport } from '@/types/session';
+import type { Coordinates, Session, SessionType, Sport } from '@/types/session';
 
 // Sessions shared by every screen: SAMPLE_SESSIONS plus ones you made in Create.
 // Joined ids, declined ids and created sessions are saved in AsyncStorage so they
@@ -79,20 +79,6 @@ type State = {
   sessions: Session[];
 };
 
-// e.g. "Just you", "Alex + 2 invited"
-export function invitedSummary(invited: Person[]) {
-  if (invited.length === 0) return 'Just you';
-  if (invited.length === 1) return `${invited[0].name} invited`;
-  return `${invited[0].name} + ${invited.length - 1} invited`;
-}
-
-// "Alex is going" if anyone accepted, otherwise who's invited
-function createdSummary(accepted: Person[], waiting: Person[]) {
-  if (accepted.length === 0) return invitedSummary(waiting);
-  if (accepted.length === 1) return `${accepted[0].name} is going`;
-  return `${accepted[0].name} + ${accepted.length - 1} going`;
-}
-
 // Turn ids back into people, skipping any that don't exist
 function people(ids: string[] = []) {
   return ids.map((id) => findPerson(id)).filter((person) => person !== undefined);
@@ -118,7 +104,6 @@ function fromStored(stored: StoredSession): Session {
     attendees: [CURRENT_USER, ...accepted],
     invited,
     declined: people(stored.declinedIds),
-    attendeeSummary: createdSummary(accepted, invited),
   };
 }
 
