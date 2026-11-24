@@ -19,6 +19,7 @@ type PickerSheetProps = {
   title: string;
   mode: 'date' | 'time';
   initialValue: Date;
+  minimumValue?: Date;
   onDone: (value: Date) => void;
   onClear: () => void;
   onClose: () => void;
@@ -30,6 +31,7 @@ export function PickerSheet({
   title,
   mode,
   initialValue,
+  minimumValue,
   onDone,
   onClear,
   onClose,
@@ -77,6 +79,7 @@ export function PickerSheet({
           <DatePicker
             selection={value}
             onDateChange={setValue}
+            range={minimumValue && { start: minimumValue }}
             displayedComponents={isTime ? ['hourAndMinute'] : ['date']}
             modifiers={[
               datePickerStyle(isTime ? 'wheel' : 'graphical'),

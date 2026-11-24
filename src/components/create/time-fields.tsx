@@ -22,11 +22,15 @@ export function TimeFields({ draft, onChange }: DraftFieldsProps) {
   const [openPicker, setOpenPicker] = useState<Picker | null>(null);
   const [lastPicker, setLastPicker] = useState<Picker>('date');
 
+  const startMinutes = draft.startMinutes ?? minutesOf(new Date());
+  const lastMinute = 23 * 60 + 59;
+
   const pickers = {
     date: {
       title: 'Date',
       mode: 'date' as const,
       initialValue: draft.date ? dateFromKey(draft.date) : new Date(),
+      minimumValue: dateFromKey(dateKey(new Date())),
       done: (value: Date) => onChange({ date: dateKey(value) }),
       clear: () => onChange({ date: null }),
     },
@@ -34,13 +38,24 @@ export function TimeFields({ draft, onChange }: DraftFieldsProps) {
       title: 'Start time',
       mode: 'time' as const,
       initialValue: draft.startMinutes === null ? new Date() : dateAtMinutes(draft.startMinutes),
-      done: (value: Date) => onChange({ startMinutes: minutesOf(value) }),
+      minimumValue: undefined,
+      done: (value: Date) => {
+        const start = minutesOf(value);
+        // Clear the end time if it's no longer after the start
+        if (draft.endMinutes !== null && draft.endMinutes <= start) {
+          onChange({ startMinutes: start, endMinutes: null });
+        } else {
+          onChange({ startMinutes: start });
+        }
+      },
       clear: () => onChange({ startMinutes: null }),
     },
     end: {
       title: 'End time',
       mode: 'time' as const,
-      initialValue: draft.endMinutes === null ? new Date() : dateAtMinutes(draft.endMinutes),
+      initialValue: dateAtMinutes(draft.endMinutes ?? Math.min(startMinutes + 60, lastMinute)),
+      // Has to end after it starts
+      minimumValue: dateAtMinutes(Math.min(startMinutes + 1, lastMinute)),
       done: (value: Date) => onChange({ endMinutes: minutesOf(value) }),
       clear: () => onChange({ endMinutes: null }),
     },
@@ -85,6 +100,7 @@ export function TimeFields({ draft, onChange }: DraftFieldsProps) {
           title={picker.title}
           mode={picker.mode}
           initialValue={picker.initialValue}
+          minimumValue={picker.minimumValue}
           onClose={() => setOpenPicker(null)}
           onClear={() => {
             picker.clear();
