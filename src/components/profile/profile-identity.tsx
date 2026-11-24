@@ -6,14 +6,14 @@ import { useTheme } from '@/hooks/use-theme';
 import type { Person } from '@/types/session';
 
 // Avatar, name and bio
-export function ProfileIdentity({ person }: { person: Person }) {
+export function ProfileIdentity({ person, title }: { person: Person; title?: string }) {
   const theme = useTheme();
 
   return (
     <View style={styles.identity}>
       <Avatar person={person} size={96} />
       <View style={styles.nameBlock}>
-        <Text style={[styles.name, { color: theme.text }]}>{person.name}</Text>
+        <Text style={[styles.name, { color: theme.text }]}>{title ?? person.name}</Text>
         <Text style={[styles.bio, { color: theme.textSecondary }]}>{person.bio}</Text>
       </View>
     </View>

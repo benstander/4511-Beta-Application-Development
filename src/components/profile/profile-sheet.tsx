@@ -1,8 +1,9 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 
 import { ProfileIdentity } from '@/components/profile/profile-identity';
 import { BottomSheet } from '@/components/ui/bottom-sheet';
-import { FontFamily } from '@/constants/theme';
+import { Button } from '@/components/ui/button';
 import { addFriend, isFriend, removeFriend, useFriends } from '@/data/friends-store';
 import { CURRENT_USER } from '@/data/people';
 import { useTheme } from '@/hooks/use-theme';
@@ -20,32 +21,51 @@ export function ProfileSheet({ person, visible, onClose }: ProfileSheetProps) {
   const friends = useFriends();
   const isYou = person.id === CURRENT_USER.id;
   const friend = isFriend(friends, person.id);
+  const [confirmingRemove, setConfirmingRemove] = useState(false);
+
+  const close = () => {
+    setConfirmingRemove(false);
+    onClose();
+  };
+
+  const confirmRemove = () => {
+    removeFriend(person.id);
+    setConfirmingRemove(false);
+  };
 
   return (
     <BottomSheet
       visible={visible}
-      onClose={onClose}
+      onClose={close}
       header={
         <View style={styles.header}>
           <View style={[styles.grabber, { backgroundColor: theme.buttonSecondaryBorder }]} />
         </View>
       }>
       <View style={styles.body}>
-        <ProfileIdentity person={person} />
+        <ProfileIdentity
+          person={person}
+          title={confirmingRemove ? `Remove ${person.name}?` : undefined}
+        />
         {/* Can't add yourself as a friend */}
-        {!isYou && (
-          <Pressable
-            onPress={() => (friend ? removeFriend(person.id) : addFriend(person.id))}
-            role="button"
-            style={({ pressed }) => [
-              styles.card,
-              { backgroundColor: theme.backgroundElement },
-              pressed && styles.pressed,
-            ]}>
-            <Text style={[styles.cardText, { color: theme.text }]}>
-              {friend ? 'Remove friend' : 'Add friend'}
-            </Text>
-          </Pressable>
+        {!isYou && confirmingRemove && (
+          <View style={styles.confirmRow}>
+            <Button
+              label="Cancel"
+              variant="secondary"
+              size="medium"
+              flex
+              onPress={() => setConfirmingRemove(false)}
+            />
+            <Button label="Confirm" size="medium" flex onPress={confirmRemove} />
+          </View>
+        )}
+        {!isYou && !confirmingRemove && (
+          <Button
+            label={friend ? 'Remove friend' : 'Add friend'}
+            variant="secondary"
+            onPress={() => (friend ? setConfirmingRemove(true) : addFriend(person.id))}
+          />
         )}
       </View>
     </BottomSheet>
@@ -68,17 +88,8 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     gap: 40,
   },
-  card: {
-    height: 60,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  pressed: {
-    opacity: 0.6,
-  },
-  cardText: {
-    fontFamily: FontFamily.medium,
-    fontSize: 18,
+  confirmRow: {
+    flexDirection: 'row',
+    gap: 8,
   },
 });

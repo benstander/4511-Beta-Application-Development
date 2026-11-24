@@ -1,17 +1,13 @@
 import { router } from 'expo-router';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { Page } from '@/components/layout/page';
 import { ProfileIdentity } from '@/components/profile/profile-identity';
-import { FontFamily } from '@/constants/theme';
-import { useFriends } from '@/data/friends-store';
+import { Button } from '@/components/ui/button';
 import { useCurrentUser } from '@/data/profile-store';
-import { useTheme } from '@/hooks/use-theme';
 
 // Profile tab
 export default function ProfileScreen() {
-  const theme = useTheme();
-  const friends = useFriends();
   const me = useCurrentUser();
 
   return (
@@ -21,29 +17,18 @@ export default function ProfileScreen() {
 
         <View style={styles.cards}>
           <View style={styles.slot}>
-            <Pressable
+            <Button
+              label="Edit profile"
+              variant="secondary"
               onPress={() => router.push('/profile/edit')}
-              role="button"
-              style={({ pressed }) => [
-                styles.card,
-                { backgroundColor: theme.backgroundElement },
-                pressed && styles.pressed,
-              ]}>
-              <Text style={[styles.cardText, { color: theme.text }]}>Edit profile</Text>
-            </Pressable>
+            />
           </View>
           <View style={styles.slot}>
-            <Pressable
+            <Button
+              label="Friends"
+              variant="secondary"
               onPress={() => router.push('/profile/friends')}
-              role="button"
-              accessibilityLabel={`Friends, ${friends.length}`}
-              style={({ pressed }) => [
-                styles.card,
-                { backgroundColor: theme.backgroundElement },
-                pressed && styles.pressed,
-              ]}>
-              <Text style={[styles.cardText, { color: theme.text }]}>Friends</Text>
-            </Pressable>
+            />
           </View>
         </View>
       </ScrollView>
@@ -62,18 +47,5 @@ const styles = StyleSheet.create({
   },
   slot: {
     flex: 1,
-  },
-  card: {
-    height: 60,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  pressed: {
-    opacity: 0.6,
-  },
-  cardText: {
-    fontFamily: FontFamily.medium,
-    fontSize: 18,
   },
 });

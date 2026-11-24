@@ -9,6 +9,7 @@ import {
   Pressable,
   StyleSheet,
   View,
+  type GestureResponderHandlers,
   type StyleProp,
   type ViewStyle,
 } from 'react-native';
@@ -73,6 +74,9 @@ export function BottomSheet({
   const panResponder = useMemo(
     () =>
       PanResponder.create({
+        // Take touches that start outside a button, otherwise the Modal takes them
+        // and the swipe never reaches us
+        onStartShouldSetPanResponder: () => true,
         // Only react to downward swipes so taps still work
         onMoveShouldSetPanResponder: (_, { dx, dy }) => dy > 6 && Math.abs(dy) > Math.abs(dx),
         onPanResponderMove: (_, { dy }) => drag.setValue(Math.max(0, dy)),
@@ -122,11 +126,8 @@ export function BottomSheet({
             sheetStyle={sheetStyle}
             translateY={translateY}
             onHeight={setSheetHeight}
-            header={
-              header != null && (
-                <Animated.View {...panResponder.panHandlers}>{header}</Animated.View>
-              )
-            }>
+            panHandlers={panResponder.panHandlers}>
+            {header}
             {children}
           </SheetPanel>
         </View>
@@ -141,14 +142,14 @@ function SheetPanel({
   sheetStyle,
   translateY,
   onHeight,
-  header,
+  panHandlers,
   children,
 }: {
   role: 'dialog' | 'alertdialog';
   sheetStyle?: StyleProp<ViewStyle>;
   translateY: Animated.AnimatedAddition;
   onHeight: (height: number) => void;
-  header: ReactNode;
+  panHandlers: GestureResponderHandlers;
   children: ReactNode;
 }) {
   const theme = useTheme();
@@ -156,6 +157,7 @@ function SheetPanel({
 
   return (
     <Animated.View
+      {...panHandlers}
       role={role}
       onLayout={(event) => onHeight(event.nativeEvent.layout.height)}
       style={[
@@ -167,7 +169,6 @@ function SheetPanel({
         },
         sheetStyle,
       ]}>
-      {header}
       {children}
     </Animated.View>
   );
