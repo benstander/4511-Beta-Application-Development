@@ -1,4 +1,4 @@
-import { CURRENT_USER, PEOPLE } from '@/data/people';
+import { CURRENT_USER, OTHERS, PEOPLE } from '@/data/people';
 import { SPORTS, type Session, type Sport } from '@/types/session';
 
 // Fake sessions for now
@@ -108,7 +108,7 @@ export const SAMPLE_SESSIONS: Session[] = [
     description:
       'Weekly 5km parkrun. Run, jog or walk it, everyone finishes together at the end. Breakfast at the cafe across the road afterwards.',
     creator: PEOPLE.sarah,
-    attendees: [PEOPLE.sarah, PEOPLE.george, PEOPLE.john],
+    attendees: [PEOPLE.sarah, PEOPLE.george, PEOPLE.john, OTHERS.liam, OTHERS.ava],
   },
   {
     id: 'futsal',
@@ -156,7 +156,7 @@ export const SAMPLE_SESSIONS: Session[] = [
     description:
       'Entering a team in the local 3x3 tournament. Looking for one more player who can shoot. Games are 10 minutes each, first to 21.',
     creator: PEOPLE.george,
-    attendees: [PEOPLE.george, PEOPLE.alex],
+    attendees: [PEOPLE.george, PEOPLE.alex, OTHERS.ryan],
   },
 
   // --- Tennis ---
@@ -188,8 +188,8 @@ export const SAMPLE_SESSIONS: Session[] = [
     coordinates: { latitude: -33.74169, longitude: 150.95472 },
     description:
       "Never played before? Perfect. We'll practise forehands, backhands and serves before a few relaxed games.",
-    creator: PEOPLE.alex,
-    attendees: [PEOPLE.alex],
+    creator: OTHERS.chloe,
+    attendees: [OTHERS.chloe, OTHERS.grace],
   },
 
   // --- Swimming ---
@@ -221,7 +221,7 @@ export const SAMPLE_SESSIONS: Session[] = [
     description:
       'Shelly Beach to Manly and back, about 2km. Strong swimmers only, and we always swim in a group. Wetsuits recommended.',
     creator: PEOPLE.john,
-    attendees: [PEOPLE.john, PEOPLE.jason, PEOPLE.george],
+    attendees: [PEOPLE.john, PEOPLE.jason, PEOPLE.george, OTHERS.zoe],
   },
 
   // --- Cycling ---
@@ -270,7 +270,7 @@ export const SAMPLE_SESSIONS: Session[] = [
     description:
       "Indoor bouldering with the crew. We'll work through problems together and cheer each other on. Shoe hire available at the front desk.",
     creator: PEOPLE.alex,
-    attendees: [PEOPLE.alex, PEOPLE.jason, PEOPLE.george, PEOPLE.john],
+    attendees: [PEOPLE.alex, PEOPLE.jason, PEOPLE.george, PEOPLE.john, OTHERS.hannah],
   },
   // --- Past sessions you went to ---
   {

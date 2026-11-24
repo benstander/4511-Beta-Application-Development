@@ -85,6 +85,10 @@ const OTHER_USERS: Person[] = (
   ] as const
 ).map(([name, avatarColor, bio]) => ({ id: name.toLowerCase(), name, avatarColor, bio }));
 
+export const OTHERS: Record<string, Person> = Object.fromEntries(
+  OTHER_USERS.map((person) => [person.id, person])
+);
+
 export const USERS: Person[] = [...Object.values(PEOPLE), ...OTHER_USERS];
 
 export const DEFAULT_FRIEND_IDS = [

@@ -65,7 +65,23 @@ const EXAMPLE_CREATED: StoredSession[] = [
     declinedIds: ['jason'],
     photoUri: null,
   },
+  {
+    id: 'created-example-ride',
+    title: 'Morning hill repeats',
+    sport: 'Cycling',
+    level: 'competitive',
+    type: 'Solo',
+    startsAt: new Date(2027, 10, 16, 6, 0).toISOString(),
+    endsAt: new Date(2027, 10, 16, 7, 0).toISOString(),
+    location: 'Bella Vista Farm Park, Bella Vista',
+    coordinates: { latitude: -33.74063, longitude: 150.95328 },
+    description: 'Just me doing hill repeats before work. Six times up the big hill then home.',
+    invitedIds: [],
+    photoUri: null,
+  },
 ];
+
+const EXAMPLE_JOINED_ID = 'saturday-parkrun';
 
 export type NewSession = Omit<StoredSession, 'id' | 'startsAt' | 'endsAt'> & {
   startsAt: Date;
@@ -189,7 +205,8 @@ export function hydrateSessionStore() {
     .then(([joinedRaw, declinedRaw, createdRaw]) => {
       const ids = (raw: string | null) => parseList(raw).filter((id) => typeof id === 'string');
       const created = createdRaw ? (parseList(createdRaw) as StoredSession[]) : EXAMPLE_CREATED;
-      state = buildState(new Set(ids(joinedRaw)), new Set(ids(declinedRaw)), created);
+      const joined = new Set(joinedRaw ? ids(joinedRaw) : [EXAMPLE_JOINED_ID]);
+      state = buildState(joined, new Set(ids(declinedRaw)), created);
     })
     .catch((error) => console.warn('Could not load saved sessions', error))
     .finally(() => {
