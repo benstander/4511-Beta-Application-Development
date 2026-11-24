@@ -1,6 +1,6 @@
-import { Image } from 'expo-image';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { XMarkIcon } from 'react-native-heroicons/outline';
 
 import { FilterPills } from '@/components/session/filter-pills';
 import { Button } from '@/components/ui/button';
@@ -114,11 +114,7 @@ export function FilterSheet({ visible, filters, sessions, onApply, onClose }: Fi
           Filters
         </Text>
         <Pressable onPress={onClose} role="button" accessibilityLabel="Close filters" hitSlop={10}>
-          <Image
-            source={require('@/assets/icons/x-mark.svg')}
-            style={styles.close}
-            tintColor={theme.text}
-          />
+          <XMarkIcon size={24} color={theme.text} strokeWidth={2} />
         </Pressable>
       </View>
       <ScrollView
@@ -202,10 +198,6 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: FontFamily.semiBold,
     fontSize: 24,
-  },
-  close: {
-    width: 24,
-    height: 24,
   },
   body: {
     flex: 1,

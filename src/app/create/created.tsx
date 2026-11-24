@@ -2,6 +2,7 @@ import * as Clipboard from 'expo-clipboard';
 import * as Linking from 'expo-linking';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
+import { CheckCircleIcon, LinkIcon } from 'react-native-heroicons/outline';
 
 import { SessionSummary } from '@/components/create/session-summary';
 import { StepScreen } from '@/components/layout/step-screen';
@@ -48,11 +49,7 @@ export default function CreateCreatedScreen() {
           <Button
             label={copied ? 'Link copied' : 'Copy link to session'}
             variant="outline"
-            icon={
-              copied
-                ? require('@/assets/icons/check-circle.svg')
-                : require('@/assets/icons/link.svg')
-            }
+            icon={copied ? CheckCircleIcon : LinkIcon}
             iconPosition="leading"
             onPress={copyLink}
           />

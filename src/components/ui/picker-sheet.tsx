@@ -6,9 +6,9 @@ import {
   presentationDragIndicator,
   tint,
 } from '@expo/ui/swift-ui/modifiers';
-import { Image } from 'expo-image';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { XMarkIcon } from 'react-native-heroicons/outline';
 
 import { Button } from '@/components/ui/button';
 import { FontFamily, Palette } from '@/constants/theme';
@@ -67,11 +67,7 @@ export function PickerSheet({
                 role="button"
                 accessibilityLabel={`Close ${title}`}
                 hitSlop={10}>
-                <Image
-                  source={require('@/assets/icons/x-mark.svg')}
-                  style={styles.close}
-                  tintColor={theme.text}
-                />
+                <XMarkIcon size={24} color={theme.text} strokeWidth={2} />
               </Pressable>
             </View>
           </RNHostView>
@@ -113,10 +109,6 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: FontFamily.semiBold,
     fontSize: 24,
-  },
-  close: {
-    width: 24,
-    height: 24,
   },
   footer: {
     flexDirection: 'row',

@@ -1,9 +1,15 @@
-import { Image } from 'expo-image';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { CheckCircleIcon, ClockIcon, PlusCircleIcon } from 'react-native-heroicons/outline';
+import {
+  CheckCircleIcon as CheckCircleSolidIcon,
+  ClockIcon as ClockSolidIcon,
+  XCircleIcon as XCircleSolidIcon,
+} from 'react-native-heroicons/solid';
 
 import { ProfileSheet } from '@/components/profile/profile-sheet';
 import { Avatar } from '@/components/ui/avatar';
+import type { IconComponent } from '@/components/ui/button';
 import { FontFamily, Palette } from '@/constants/theme';
 import { useCurrentUser } from '@/data/profile-store';
 import { useTheme } from '@/hooks/use-theme';
@@ -12,11 +18,11 @@ import type { Person } from '@/types/session';
 // Icon on the right: going = tick, invited = clock, declined = x, add = plus
 export type PersonStatus = 'going' | 'invited' | 'declined' | 'add';
 
-const STATUS_ICONS: Record<PersonStatus, number> = {
-  going: require('@/assets/icons/check-circle.svg'),
-  invited: require('@/assets/icons/clock-24.svg'),
-  declined: require('@/assets/icons/x-circle-solid.svg'),
-  add: require('@/assets/icons/plus-circle.svg'),
+const STATUS_ICONS: Record<PersonStatus, IconComponent> = {
+  going: CheckCircleIcon,
+  invited: ClockIcon,
+  declined: XCircleSolidIcon,
+  add: PlusCircleIcon,
 };
 
 const STATUS_LABELS: Record<PersonStatus, string> = {
@@ -26,10 +32,10 @@ const STATUS_LABELS: Record<PersonStatus, string> = {
   add: 'not invited',
 };
 
-const TINTED_ICONS: Partial<Record<PersonStatus, { icon: number; color: string }>> = {
-  going: { icon: require('@/assets/icons/check-circle-solid.svg'), color: Palette.success },
-  invited: { icon: require('@/assets/icons/clock-solid.svg'), color: Palette.pending },
-  declined: { icon: require('@/assets/icons/x-circle-solid.svg'), color: Palette.destructive },
+const TINTED_ICONS: Partial<Record<PersonStatus, { icon: IconComponent; color: string }>> = {
+  going: { icon: CheckCircleSolidIcon, color: Palette.success },
+  invited: { icon: ClockSolidIcon, color: Palette.pending },
+  declined: { icon: XCircleSolidIcon, color: Palette.destructive },
 };
 
 type PersonRowProps = {
@@ -57,13 +63,8 @@ export function PersonRow({
 
   const label = status ? `${name}, ${STATUS_LABELS[status]}` : name;
   const tint = tinted && status ? TINTED_ICONS[status] : undefined;
-  const statusIcon = status && (
-    <Image
-      source={tint?.icon ?? STATUS_ICONS[status]}
-      style={styles.icon}
-      tintColor={tint?.color ?? theme.text}
-    />
-  );
+  const StatusIcon = status ? (tint?.icon ?? STATUS_ICONS[status]) : null;
+  const statusIcon = StatusIcon && <StatusIcon size={24} color={tint?.color ?? theme.text} />;
 
   return (
     <>
@@ -146,10 +147,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
     flexShrink: 1,
-  },
-  icon: {
-    width: 24,
-    height: 24,
   },
   name: {
     flexShrink: 1,

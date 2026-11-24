@@ -1,7 +1,7 @@
-import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { ClockIcon } from 'react-native-heroicons/outline';
 
 import { StepScreen } from '@/components/layout/step-screen';
 import { Avatar } from '@/components/ui/avatar';
@@ -83,11 +83,7 @@ function NotificationRow({ item, unread }: { item: AppNotification; unread: bool
         <Avatar person={item.person} size={36} />
       ) : (
         <View style={[styles.iconCircle, { backgroundColor: theme.background }]}>
-          <Image
-            source={require('@/assets/icons/clock.svg')}
-            style={styles.icon}
-            tintColor={theme.text}
-          />
+          <ClockIcon size={20} color={theme.text} />
         </View>
       )}
       <View style={styles.body}>
@@ -123,10 +119,6 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  icon: {
-    width: 20,
-    height: 20,
   },
   body: {
     flex: 1,

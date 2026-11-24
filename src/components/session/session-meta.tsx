@@ -1,5 +1,5 @@
-import { Image } from 'expo-image';
 import { StyleSheet, Text, View } from 'react-native';
+import { ClockIcon, MapPinIcon } from 'react-native-heroicons/outline';
 
 import { Avatar } from '@/components/ui/avatar';
 import { FontFamily } from '@/constants/theme';
@@ -27,21 +27,13 @@ export function SessionMeta({ session, variant = 'card' }: SessionMetaProps) {
     <View style={styles.row}>
       <View style={styles.details}>
         <View style={[styles.detail, wrap && styles.detailWrapped]}>
-          <Image
-            source={require('@/assets/icons/clock.svg')}
-            style={[styles.icon, wrap && styles.iconWrapped]}
-            tintColor={theme.text}
-          />
+          <ClockIcon size={18} color={theme.text} style={wrap && styles.iconWrapped} />
           <Text style={[styles.text, { color: theme.text }]} numberOfLines={lines}>
             {formatSessionTime(startsAt, endsAt)}
           </Text>
         </View>
         <View style={[styles.detail, wrap && styles.detailWrapped]}>
-          <Image
-            source={require('@/assets/icons/map-pin.svg')}
-            style={[styles.icon, wrap && styles.iconWrapped]}
-            tintColor={theme.text}
-          />
+          <MapPinIcon size={18} color={theme.text} style={wrap && styles.iconWrapped} />
           <Text style={[styles.text, { color: theme.text }]} numberOfLines={lines}>
             {location}
           </Text>
@@ -90,10 +82,6 @@ const styles = StyleSheet.create({
   },
   detailWrapped: {
     alignItems: 'flex-start',
-  },
-  icon: {
-    width: 18,
-    height: 18,
   },
   iconWrapped: {
     marginTop: 1,

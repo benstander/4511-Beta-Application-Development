@@ -1,5 +1,5 @@
-import { Image } from 'expo-image';
 import { Pressable, ScrollView, StyleSheet, Text } from 'react-native';
+import { XMarkIcon } from 'react-native-heroicons/outline';
 
 import { FontFamily } from '@/constants/theme';
 import {
@@ -41,11 +41,7 @@ export function FilterPills({ filters, onChange }: FilterPillsProps) {
           <Text style={[styles.label, { color: theme.text }]} numberOfLines={1}>
             {pill.label}
           </Text>
-          <Image
-            source={require('@/assets/icons/x-mark.svg')}
-            style={styles.remove}
-            tintColor={theme.text}
-          />
+          <XMarkIcon size={14} color={theme.text} strokeWidth={2} />
         </Pressable>
       ))}
     </ScrollView>
@@ -76,9 +72,5 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.medium,
     fontSize: 14,
     maxWidth: 180,
-  },
-  remove: {
-    width: 14,
-    height: 14,
   },
 });

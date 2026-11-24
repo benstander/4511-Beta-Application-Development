@@ -1,8 +1,11 @@
-import { Image, type ImageSource } from 'expo-image';
+import type { ComponentType } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { FontFamily, Palette } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
+
+// Any Heroicon, e.g. CheckCircleIcon
+export type IconComponent = ComponentType<{ size?: number; color?: string }>;
 
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'destructive' | 'destructiveText';
 
@@ -10,7 +13,7 @@ type ButtonProps = {
   label: string;
   variant?: ButtonVariant;
   size?: 'large' | 'medium';
-  icon?: ImageSource | number;
+  icon?: IconComponent;
   iconPosition?: 'leading' | 'trailing';
   disabled?: boolean;
   onPress?: () => void;
@@ -21,7 +24,7 @@ export function Button({
   label,
   variant = 'primary',
   size = 'large',
-  icon,
+  icon: Icon,
   iconPosition = 'trailing',
   disabled,
   onPress,
@@ -49,8 +52,7 @@ export function Button({
     destructiveText: Palette.destructive,
   }[variant];
 
-  const iconImage =
-    icon != null ? <Image source={icon} style={styles.icon} tintColor={textColor} /> : null;
+  const iconImage = Icon ? <Icon size={24} color={textColor} /> : null;
 
   const content = (
     <>
@@ -118,9 +120,5 @@ const styles = StyleSheet.create({
   },
   labelMedium: {
     fontSize: 16,
-  },
-  icon: {
-    width: 24,
-    height: 24,
   },
 });

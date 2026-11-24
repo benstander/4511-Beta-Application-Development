@@ -1,6 +1,7 @@
 import { router, useLocalSearchParams, useSegments } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { CheckBadgeIcon } from 'react-native-heroicons/outline';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { BackButton } from '@/components/layout/back-button';
@@ -151,7 +152,7 @@ export default function SessionDetailScreen() {
               <Button label="Accept" flex onPress={() => joinSession(session.id)} />
             </View>
           ) : going ? (
-            <Button label="Going" icon={require('@/assets/icons/check-badge.svg')} />
+            <Button label="Going" icon={CheckBadgeIcon} />
           ) : (
             <Button label="Join session" onPress={() => joinSession(session.id)} />
           )}

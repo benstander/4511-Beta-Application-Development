@@ -1,4 +1,3 @@
-import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useEffect, useState, type ReactNode } from 'react';
 import {
@@ -12,6 +11,7 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { ArrowLeftIcon } from 'react-native-heroicons/outline';
 
 import { BackButton } from '@/components/layout/back-button';
 import { MaxContentWidth, ScreenPadding, Spacing } from '@/constants/theme';
@@ -86,11 +86,7 @@ export function StepScreen({
                     },
                     pressed && styles.pressed,
                   ]}>
-                  <Image
-                    source={require('@/assets/icons/arrow-left.svg')}
-                    style={styles.backIcon}
-                    tintColor={theme.text}
-                  />
+                  <ArrowLeftIcon size={24} color={theme.text} strokeWidth={2} />
                 </Pressable>
                 <View style={styles.footerMain}>{footer}</View>
               </View>
@@ -166,10 +162,6 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  backIcon: {
-    width: 24,
-    height: 24,
   },
   pressed: {
     opacity: 0.8,

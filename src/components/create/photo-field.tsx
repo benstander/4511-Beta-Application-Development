@@ -1,6 +1,7 @@
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { PlusIcon, XMarkIcon } from 'react-native-heroicons/outline';
 
 import { FontFamily } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
@@ -45,11 +46,7 @@ export function PhotoField({ uri, onChange }: PhotoFieldProps) {
             { backgroundColor: theme.iconButton, borderColor: theme.iconButtonBorder },
             pressed && styles.pressed,
           ]}>
-          <Image
-            source={require('@/assets/icons/x-mark.svg')}
-            style={styles.removeIcon}
-            tintColor={theme.text}
-          />
+          <XMarkIcon size={18} color={theme.text} strokeWidth={2} />
         </Pressable>
       </View>
     );
@@ -61,7 +58,7 @@ export function PhotoField({ uri, onChange }: PhotoFieldProps) {
       role="button"
       accessibilityLabel="Add cover photo"
       style={({ pressed }) => [styles.empty, { borderColor: theme.text }, pressed && styles.pressed]}>
-      <Image source={require('@/assets/icons/plus.svg')} style={styles.plus} tintColor={theme.text} />
+      <PlusIcon size={20} color={theme.text} />
       <Text style={[styles.text, { color: theme.text }]}>Add photo</Text>
     </Pressable>
   );
@@ -76,10 +73,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-  },
-  plus: {
-    width: 20,
-    height: 20,
   },
   text: {
     fontFamily: FontFamily.medium,
@@ -99,10 +92,6 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  removeIcon: {
-    width: 18,
-    height: 18,
   },
   pressed: {
     opacity: 0.8,

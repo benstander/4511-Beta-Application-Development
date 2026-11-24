@@ -1,6 +1,6 @@
-import { Image } from 'expo-image';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { InformationCircleIcon } from 'react-native-heroicons/outline';
 
 import { BottomSheet } from '@/components/ui/bottom-sheet';
 import { FontFamily } from '@/constants/theme';
@@ -27,11 +27,7 @@ export function SessionTypeInfo() {
         accessibilityLabel="What do the session types mean?"
         hitSlop={10}
         style={({ pressed }) => pressed && styles.pressed}>
-        <Image
-          source={require('@/assets/icons/information-circle.svg')}
-          style={styles.icon}
-          tintColor={theme.text}
-        />
+        <InformationCircleIcon size={22} color={theme.text} />
       </Pressable>
 
       <BottomSheet
@@ -61,10 +57,6 @@ export function SessionTypeInfo() {
 }
 
 const styles = StyleSheet.create({
-  icon: {
-    width: 22,
-    height: 22,
-  },
   pressed: {
     opacity: 0.6,
   },

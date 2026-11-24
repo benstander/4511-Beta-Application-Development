@@ -1,5 +1,5 @@
-import { Image } from 'expo-image';
 import { StyleSheet, TextInput, View } from 'react-native';
+import { MagnifyingGlassIcon } from 'react-native-heroicons/outline';
 
 import { fieldBoxStyle } from '@/components/ui/form-field';
 import { FontFamily } from '@/constants/theme';
@@ -24,11 +24,7 @@ export function SearchField({
 
   return (
     <View style={[fieldBoxStyle, styles.box, { borderColor: theme.text }]}>
-      <Image
-        source={require('@/assets/icons/magnifying-glass.svg')}
-        style={styles.icon}
-        tintColor={theme.text}
-      />
+      <MagnifyingGlassIcon size={18} color={theme.text} />
       <TextInput
         value={value}
         onChangeText={onChangeText}
@@ -48,10 +44,6 @@ export function SearchField({
 const styles = StyleSheet.create({
   box: {
     gap: 12,
-  },
-  icon: {
-    width: 18,
-    height: 18,
   },
   input: {
     flex: 1,

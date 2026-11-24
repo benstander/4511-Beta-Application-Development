@@ -1,5 +1,5 @@
-import { Image } from 'expo-image';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { AdjustmentsHorizontalIcon } from 'react-native-heroicons/outline';
 
 import { FontFamily, Palette } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
@@ -66,11 +66,7 @@ export function CategoryTabs<T extends string>({
           { borderColor: filterActive ? Palette.primary : 'transparent' },
           pressed && styles.pressed,
         ]}>
-        <Image
-          source={require('@/assets/icons/adjustments-horizontal.svg')}
-          style={styles.filterIcon}
-          tintColor={theme.text}
-        />
+        <AdjustmentsHorizontalIcon size={26} color={theme.text} />
         {filterActive && (
           <View
             style={[
@@ -121,10 +117,6 @@ const styles = StyleSheet.create({
     padding: 6,
     borderRadius: 999,
     borderWidth: 2,
-  },
-  filterIcon: {
-    width: 26,
-    height: 26,
   },
   countBadge: {
     position: 'absolute',

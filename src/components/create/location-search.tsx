@@ -1,6 +1,6 @@
-import { Image } from 'expo-image';
 import { useEffect, useRef, useState, type ComponentRef } from 'react';
 import { Keyboard, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { MagnifyingGlassIcon, MapPinIcon } from 'react-native-heroicons/outline';
 
 import { SessionMap } from '@/components/session/session-map';
 import { fieldBoxStyle } from '@/components/ui/form-field';
@@ -63,11 +63,7 @@ export function LocationSearch({ value, onChangeText, onSelect, picked }: Locati
   return (
     <View>
       <View style={[fieldBoxStyle, styles.box, { borderColor: theme.text }, open && styles.boxOpen]}>
-        <Image
-          source={require('@/assets/icons/magnifying-glass.svg')}
-          style={styles.icon}
-          tintColor={theme.text}
-        />
+        <MagnifyingGlassIcon size={18} color={theme.text} />
         <TextInput
           ref={inputRef}
           value={value}
@@ -96,11 +92,7 @@ export function LocationSearch({ value, onChangeText, onSelect, picked }: Locati
                 role="button"
                 accessibilityLabel={placeLabel(place)}
                 style={({ pressed }) => [styles.option, pressed && { backgroundColor: theme.iconButton }]}>
-                <Image
-                  source={require('@/assets/icons/map-pin.svg')}
-                  style={styles.pin}
-                  tintColor={theme.text}
-                />
+                <MapPinIcon size={20} color={theme.text} />
                 <View style={styles.optionText}>
                   <Text style={[styles.name, { color: theme.text }]} numberOfLines={1}>
                     {place.name}
@@ -156,10 +148,6 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
   },
-  icon: {
-    width: 18,
-    height: 18,
-  },
   input: {
     flex: 1,
     height: '100%',
@@ -182,10 +170,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-  },
-  pin: {
-    width: 20,
-    height: 20,
   },
   optionText: {
     flex: 1,

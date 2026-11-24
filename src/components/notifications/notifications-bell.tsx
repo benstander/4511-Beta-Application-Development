@@ -1,6 +1,6 @@
-import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { Pressable, StyleSheet, View } from 'react-native';
+import { BellIcon } from 'react-native-heroicons/outline';
 
 import { Palette } from '@/constants/theme';
 import { useHasUnreadNotifications } from '@/data/notifications';
@@ -18,11 +18,7 @@ export function NotificationsBell() {
       accessibilityLabel={unread ? 'Notifications, new' : 'Notifications'}
       hitSlop={12}
       style={({ pressed }) => [styles.button, pressed && styles.pressed]}>
-      <Image
-        source={require('@/assets/icons/bell.svg')}
-        style={styles.icon}
-        tintColor={theme.text}
-      />
+      <BellIcon size={26} color={theme.text} />
       {unread && <View style={[styles.dot, { borderColor: theme.background }]} />}
     </Pressable>
   );
@@ -34,10 +30,6 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.6,
-  },
-  icon: {
-    width: 26,
-    height: 26,
   },
   dot: {
     position: 'absolute',

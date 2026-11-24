@@ -1,6 +1,6 @@
-import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { Pressable, StyleSheet } from 'react-native';
+import { ArrowLeftIcon } from 'react-native-heroicons/outline';
 
 import { useTheme } from '@/hooks/use-theme';
 
@@ -25,11 +25,7 @@ export function BackButton({ onPress }: BackButtonProps) {
         { backgroundColor: theme.iconButton, borderColor: theme.iconButtonBorder },
         pressed && styles.pressed,
       ]}>
-      <Image
-        source={require('@/assets/icons/arrow-left.svg')}
-        style={styles.icon}
-        tintColor={theme.text}
-      />
+      <ArrowLeftIcon size={20} color={theme.text} strokeWidth={2} />
     </Pressable>
   );
 }
@@ -45,9 +41,5 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.7,
-  },
-  icon: {
-    width: 20,
-    height: 20,
   },
 });

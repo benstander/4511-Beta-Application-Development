@@ -1,5 +1,5 @@
-import { Image } from 'expo-image';
 import { Pressable, StyleSheet, Text } from 'react-native';
+import { ChevronDownIcon } from 'react-native-heroicons/outline';
 
 import { fieldBoxStyle } from '@/components/ui/form-field';
 import { FontFamily } from '@/constants/theme';
@@ -25,11 +25,7 @@ export function FieldTrigger({ text, open, onPress }: FieldTriggerProps) {
       <Text style={[styles.text, { color: theme.text }]} numberOfLines={1}>
         {text}
       </Text>
-      <Image
-        source={require('@/assets/icons/chevron-down.svg')}
-        style={[styles.chevron, open && styles.chevronOpen]}
-        tintColor={theme.text}
-      />
+      <ChevronDownIcon size={18} color={theme.text} style={open && styles.chevronOpen} />
     </Pressable>
   );
 }
@@ -43,10 +39,6 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     fontFamily: FontFamily.medium,
     fontSize: 16,
-  },
-  chevron: {
-    width: 18,
-    height: 18,
   },
   chevronOpen: {
     transform: [{ rotate: '180deg' }],
