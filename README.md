@@ -1,56 +1,51 @@
-# Welcome to your Expo app 👋
+# Sessions: COMP4511 Beta App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A React Native (Expo) app for finding, joining and creating local sport sessions with friends. The app was built and tested on **iOS** (iPhone, in Expo Go and the iOS Simulator).
 
-## Get started
+## Requirements
 
-1. Install dependencies
+- [Node.js](https://nodejs.org/) LTS (tested with Node 24)
+- One of:
+  - **Expo Go** on an iPhone ([App Store](https://apps.apple.com/app/expo-go/id982107779)), with the iPhone and computer on the same Wi-Fi network
+  - **Xcode** with the iOS Simulator (Mac only)
+
+No accounts, API keys or backend are needed. All data is sample data stored on the device.
+
+## Running the app
+
+1. Clone the repository and install dependencies:
 
    ```bash
+   git clone https://github.com/benstander/4511-Beta-Application-Development.git
+   cd 4511-Beta-Application-Development
    npm install
    ```
 
-2. Start the app
+2. Start the development server:
 
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+3. Open the app:
+   - **iPhone:** scan the QR code in the terminal with the Camera app. It opens in Expo Go.
+   - **iOS Simulator:** press `i` in the terminal. Expo Go installs in the simulator automatically the first time.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Using the app
 
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+You are signed in as the sample user **Ben**. The app has four tabs:
 
-## Get a fresh project
+- **Sessions:** browse upcoming sessions by sport, filter them, and open one to join it. The bell in the top right opens your notifications (invites, replies to your sessions and reminders).
+- **My Sessions:** sessions you're going to, invites waiting for an answer, sessions you created and your history. Open one to leave, edit or delete it, or to accept or decline an invite.
+- **Create:** a step-by-step flow to create a session (details, time, location, session type, invite friends, summary).
+- **Profile:** your profile, editing your name and bio, and managing friends.
 
-When you're ready, run:
+Other people, their replies and the notification history are simulated so the app looks like it's in real use.
 
-```bash
-npm run reset-project
-```
+## Project structure
 
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
-
-### Other setup steps
-
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- `src/app/`: screens and navigation (Expo Router; each folder is a tab)
+- `src/components/`: shared UI components
+- `src/data/`: sample data and the on-device stores
+- `src/screens/`: screens shared between tabs (session details)
+- `assets/`: icons and images
