@@ -271,4 +271,35 @@ export const SAMPLE_SESSIONS: Session[] = [
     creator: PEOPLE.alex,
     attendees: [PEOPLE.alex, PEOPLE.jason, PEOPLE.george, PEOPLE.john],
   },
+  // --- Past sessions you went to ---
+  {
+    id: 'tuesday-futsal',
+    title: 'Tuesday night futsal',
+    sport: 'Soccer',
+    level: 'social',
+    image: IMAGES.soccer,
+    startsAt: new Date(2026, 10, 17, 19, 0),
+    endsAt: new Date(2026, 10, 17, 20, 30),
+    location: 'Castle Hill Indoor Sports, Castle Hill',
+    coordinates: { latitude: -33.72579, longitude: 151.01961 },
+    description:
+      'Five-a-side futsal on the indoor court. Teams get mixed up each game so everyone plays with everyone. Indoor shoes only.',
+    creator: PEOPLE.john,
+    attendees: [PEOPLE.john, CURRENT_USER, PEOPLE.jason, PEOPLE.george],
+  },
+  {
+    id: 'sunrise-parkrun',
+    title: 'Sunrise parkrun',
+    sport: 'Running',
+    level: 'beginner',
+    image: IMAGES.running,
+    startsAt: new Date(2026, 10, 21, 7, 0),
+    endsAt: new Date(2026, 10, 21, 8, 0),
+    location: 'Bella Vista Farm Park, Bella Vista',
+    coordinates: { latitude: -33.74063, longitude: 150.95328 },
+    description:
+      'Easy 5km loop around the farm park at sunrise. Run, jog or walk, we all finish together and grab coffee after.',
+    creator: PEOPLE.sarah,
+    attendees: [PEOPLE.sarah, CURRENT_USER, PEOPLE.alex],
+  },
 ];

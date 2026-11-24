@@ -8,10 +8,11 @@ import { useTheme } from '@/hooks/use-theme';
 
 type PageProps = {
   title: string;
+  headerRight?: ReactNode;
   children?: ReactNode;
 };
 
-export function Page({ title, children }: PageProps) {
+export function Page({ title, headerRight, children }: PageProps) {
   const theme = useTheme();
   const bottomTabInset = useBottomTabInset();
 
@@ -20,9 +21,12 @@ export function Page({ title, children }: PageProps) {
       <SafeAreaView
         edges={['top', 'left', 'right']}
         style={[styles.safeArea, { paddingBottom: bottomTabInset + Spacing.three }]}>
-        <Text role="heading" style={[styles.title, { color: theme.text }]}>
-          {title}
-        </Text>
+        <View style={styles.header}>
+          <Text role="heading" style={[styles.title, { color: theme.text }]}>
+            {title}
+          </Text>
+          {headerRight}
+        </View>
         {children}
       </SafeAreaView>
     </View>
@@ -41,6 +45,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: ScreenPadding,
     paddingTop: ScreenPadding,
     gap: Spacing.three,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 12,
   },
   title: {
     fontSize: 32,

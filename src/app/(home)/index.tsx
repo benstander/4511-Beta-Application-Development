@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ScrollView, StyleSheet, Text } from 'react-native';
 
 import { Page } from '@/components/layout/page';
+import { NotificationsBell } from '@/components/notifications/notifications-bell';
 import { FilterPills } from '@/components/session/filter-pills';
 import { FilterSheet } from '@/components/session/filter-sheet';
 import { SessionCard } from '@/components/session/session-card';
@@ -22,7 +23,8 @@ export default function SessionsScreen() {
   const [category, setCategory] = useState<SessionCategory>('All');
   const [filters, setFilters] = useState<SessionFilters>(EMPTY_FILTERS);
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const allSessions = useSessions();
+  const now = new Date();
+  const allSessions = useSessions().filter((session) => session.endsAt >= now);
   const filtering = hasActiveFilters(filters);
 
   const inCategory =
@@ -32,7 +34,7 @@ export default function SessionsScreen() {
   const sessions = applySessionFilters(inCategory, filters);
 
   return (
-    <Page title="Sessions">
+    <Page title="Sessions" headerRight={<NotificationsBell />}>
       <CategoryTabs
         categories={SESSION_CATEGORIES}
         selected={category}

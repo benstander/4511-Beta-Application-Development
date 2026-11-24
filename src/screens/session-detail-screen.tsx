@@ -53,6 +53,7 @@ export default function SessionDetailScreen() {
   const going = isAttending(session);
   const mine = isCreator(session);
   const invitedMe = isInvited(session);
+  const ended = session.endsAt < new Date();
   const notGoing = (session.invited?.length ?? 0) + (session.declined?.length ?? 0);
   const friendsGoing = session.attendees.filter((person) => isFriend(friends, person.id));
   const attendees = [...session.attendees].sort(
@@ -113,7 +114,7 @@ export default function SessionDetailScreen() {
             )}
 
             {/* Creator can delete, attendees can leave */}
-            {mine ? (
+            {ended ? null : mine ? (
               <Button
                 label="Delete session"
                 variant="destructiveText"
@@ -133,7 +134,11 @@ export default function SessionDetailScreen() {
 
         {/* Edit if it's yours, Decline/Accept if you're invited, otherwise Join or Going */}
         <View style={[styles.footer, { paddingBottom: bottomTabInset + 16 }]}>
-          {mine ? (
+          {ended ? (
+            <Text style={[styles.ended, { color: theme.textSecondary }]}>
+              This session has ended.
+            </Text>
+          ) : mine ? (
             <Button label="Edit session" onPress={editSession} />
           ) : invitedMe ? (
             <View style={styles.responseRow}>
@@ -215,6 +220,12 @@ const styles = StyleSheet.create({
     gap: 8,
     paddingHorizontal: ScreenPadding,
     paddingTop: 12,
+  },
+  ended: {
+    fontFamily: FontFamily.medium,
+    fontSize: 16,
+    textAlign: 'center',
+    paddingVertical: 8,
   },
   responseRow: {
     flexDirection: 'row',

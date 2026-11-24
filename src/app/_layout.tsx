@@ -11,6 +11,7 @@ import { useColorScheme } from 'react-native';
 
 import AppTabs from '@/components/layout/app-tabs';
 import { hydrateFriends } from '@/data/friends-store';
+import { hydrateNotifications } from '@/data/notifications';
 import { hydrateProfile } from '@/data/profile-store';
 import { hydrateSessionStore, useSessionStoreReady } from '@/data/session-store';
 
@@ -30,6 +31,7 @@ export default function TabLayout() {
     hydrateSessionStore();
     hydrateFriends();
     hydrateProfile();
+    hydrateNotifications();
   }, []);
 
   useEffect(() => {
