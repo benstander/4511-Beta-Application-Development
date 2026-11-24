@@ -8,7 +8,6 @@ import { StepScreen } from '@/components/layout/step-screen';
 import { Button } from '@/components/ui/button';
 import { resetCreateDraft } from '@/data/create-draft';
 import { useSession } from '@/data/session-store';
-import { SPORT_IMAGES } from '@/data/sessions';
 
 // Last step, the session is made. You can copy a link or go see it in My Sessions
 export default function CreateCreatedScreen() {
@@ -63,7 +62,7 @@ export default function CreateCreatedScreen() {
       {session?.type && (
         <SessionSummary
           title={session.title}
-          image={session.image ?? SPORT_IMAGES[session.sport]}
+          image={session.image}
           sport={session.sport}
           type={session.type}
           level={session.level}

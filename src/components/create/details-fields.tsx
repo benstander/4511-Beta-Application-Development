@@ -20,7 +20,11 @@ const LEVEL_OPTIONS: MenuOption<SessionLevel>[] = [
 export function DetailsFields({ draft, onChange }: DraftFieldsProps) {
   return (
     <>
-      <FormField label="Session type" labelAccessory={<SessionTypeInfo />} style={{ gap: 10 }}>
+      <FormField
+        label="Session type"
+        required
+        labelAccessory={<SessionTypeInfo />}
+        style={{ gap: 10 }}>
         <ChoicePills
           label="Session type"
           options={SESSION_TYPES}
@@ -29,7 +33,7 @@ export function DetailsFields({ draft, onChange }: DraftFieldsProps) {
         />
       </FormField>
 
-      <FormField label="Activity">
+      <FormField label="Activity" required>
         <NativeMenuField
           placeholder="Select activity"
           options={SPORT_OPTIONS}
@@ -39,7 +43,7 @@ export function DetailsFields({ draft, onChange }: DraftFieldsProps) {
         />
       </FormField>
 
-      <FormField label="Session name">
+      <FormField label="Session name" required>
         <TextField
           value={draft.title}
           onChangeText={(title) => onChange({ title })}
@@ -49,7 +53,7 @@ export function DetailsFields({ draft, onChange }: DraftFieldsProps) {
         />
       </FormField>
 
-      <FormField label="Skill level">
+      <FormField label="Skill level" required>
         <NativeMenuField
           placeholder="Select level"
           options={LEVEL_OPTIONS}

@@ -16,7 +16,7 @@ export function SessionHeader({ session }: SessionHeaderProps) {
 
   return (
     <View>
-      <SessionImage image={session.image} style={styles.image} />
+      <SessionImage image={session.image} sport={session.sport} style={styles.image} />
       <View style={styles.body}>
         <View style={styles.titleRow}>
           <Text role="heading" style={[styles.title, { color: theme.text }]} numberOfLines={2}>

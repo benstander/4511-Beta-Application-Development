@@ -55,10 +55,10 @@ export default function EditSessionScreen() {
       footer={<Button label="Save changes" disabled={!updated} onPress={save} />}>
       <DetailsFields draft={form} onChange={onChange} />
       <TimeFields draft={form} onChange={onChange} />
-      <FormField label="Location">
+      <FormField label="Location" required>
         <LocationField draft={form} onChange={onChange} />
       </FormField>
-      <FormField label="Description">
+      <FormField label="Description" required>
         <TextField
           value={form.description}
           onChangeText={(description) => onChange({ description })}

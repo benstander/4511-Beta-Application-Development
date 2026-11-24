@@ -22,7 +22,7 @@ export function SessionCard({ session, detailPathname = '/session/[id]' }: Sessi
         role="link"
         accessibilityLabel={`${session.title}, view details`}
         style={({ pressed }) => [styles.card, pressed && styles.pressed]}>
-        <SessionImage image={session.image} style={styles.image} />
+        <SessionImage image={session.image} sport={session.sport} style={styles.image} />
 
         <View style={[styles.body, { borderColor: theme.border }]}>
           <View style={styles.titleRow}>

@@ -23,7 +23,7 @@ export default function CreateDescribeScreen() {
           onPress={() => router.push(invites ? '/create/invite' : '/create/summary')}
         />
       }>
-      <FormField label="Description">
+      <FormField label="Description" required>
         <TextField
           value={draft.description}
           onChangeText={(description) => updateCreateDraft({ description })}

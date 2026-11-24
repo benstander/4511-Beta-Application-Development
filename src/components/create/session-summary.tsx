@@ -5,6 +5,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { PersonList } from '@/components/session/person-row';
 import { SessionMap } from '@/components/session/session-map';
 import { BottomSheet } from '@/components/ui/bottom-sheet';
+import { SPORT_EMOJIS } from '@/data/sessions';
 import { FontFamily, Palette, SessionLevelColors, type SessionLevel } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import type { Coordinates, Person, SessionType, Sport } from '@/types/session';
@@ -17,7 +18,7 @@ const LEVEL_LABELS: Record<SessionLevel, string> = {
 
 type SessionSummaryProps = {
   title: string;
-  image: ImageSource | number;
+  image?: ImageSource | number;
   sport: Sport;
   type: SessionType;
   level: SessionLevel;
@@ -59,7 +60,13 @@ export function SessionSummary({
               accessible={false}
             />
           )}
-          <Image source={image} style={styles.photo} contentFit="cover" accessible={false} />
+          {image ? (
+            <Image source={image} style={styles.photo} contentFit="cover" accessible={false} />
+          ) : (
+            <View style={styles.photo}>
+              <Text style={styles.emoji}>{SPORT_EMOJIS[sport]}</Text>
+            </View>
+          )}
         </View>
         <Text style={[styles.title, { color: theme.text }]}>{title}</Text>
         <View style={styles.pills}>
@@ -166,6 +173,11 @@ const styles = StyleSheet.create({
     width: 134,
     height: 134,
     borderRadius: 999,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emoji: {
+    fontSize: 88,
   },
   title: {
     marginTop: -16,

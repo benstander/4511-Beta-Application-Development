@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { draftToNewSession, useCreateDraft } from '@/data/create-draft';
 import { findPerson } from '@/data/people';
 import { createSession } from '@/data/session-store';
-import { SPORT_IMAGES } from '@/data/sessions';
 
 // Step 6: check everything then create it
 export default function CreateSummaryScreen() {
@@ -33,7 +32,7 @@ export default function CreateSummaryScreen() {
       footer={<Button label="Create session" onPress={create} />}>
       <SessionSummary
         title={session.title}
-        image={session.photoUri ? { uri: session.photoUri } : SPORT_IMAGES[session.sport]}
+        image={session.photoUri ? { uri: session.photoUri } : undefined}
         sport={session.sport}
         type={session.type}
         level={session.level}

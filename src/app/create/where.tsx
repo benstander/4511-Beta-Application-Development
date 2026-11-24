@@ -21,7 +21,7 @@ export default function CreateWhereScreen() {
           onPress={() => router.push('/create/describe')}
         />
       }>
-      <FormField label="Location">
+      <FormField label="Location" required>
         <LocationField draft={draft} onChange={updateCreateDraft} />
       </FormField>
     </StepScreen>

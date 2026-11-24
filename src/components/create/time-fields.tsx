@@ -68,7 +68,7 @@ export function TimeFields({ draft, onChange }: DraftFieldsProps) {
 
   return (
     <>
-      <FormField label="Date">
+      <FormField label="Date" required>
         <FieldTrigger
           text={draft.date ? formatDateKey(draft.date) : 'DD/MM/YYYY'}
           open={openPicker === 'date'}
@@ -77,14 +77,14 @@ export function TimeFields({ draft, onChange }: DraftFieldsProps) {
       </FormField>
 
       <View style={styles.timeRow}>
-        <FormField label="Start time" style={styles.timeField}>
+        <FormField label="Start time" required style={styles.timeField}>
           <FieldTrigger
             text={draft.startMinutes === null ? 'e.g. 11:00am' : formatTime(draft.startMinutes)}
             open={openPicker === 'start'}
             onPress={() => open('start')}
           />
         </FormField>
-        <FormField label="End time" style={styles.timeField}>
+        <FormField label="End time" required style={styles.timeField}>
           <FieldTrigger
             text={draft.endMinutes === null ? 'e.g. 1:00pm' : formatTime(draft.endMinutes)}
             open={openPicker === 'end'}

@@ -18,15 +18,16 @@ const IMAGES = {
   climbing: require('@/assets/images/sessions/climbing.jpg'),
 };
 
-export const SPORT_IMAGES: Record<Sport, number> = {
-  Gym: IMAGES.gym,
-  Running: IMAGES.running,
-  Soccer: IMAGES.soccer,
-  Basketball: IMAGES.basketball,
-  Tennis: IMAGES.tennis,
-  Swimming: IMAGES.swimming,
-  Cycling: IMAGES.cycling,
-  Climbing: IMAGES.climbing,
+// Shown when a session has no cover photo
+export const SPORT_EMOJIS: Record<Sport, string> = {
+  Gym: '🏋️',
+  Running: '🏃',
+  Soccer: '⚽',
+  Basketball: '🏀',
+  Tennis: '🎾',
+  Swimming: '🏊',
+  Cycling: '🚴',
+  Climbing: '🧗',
 };
 
 export const SAMPLE_SESSIONS: Session[] = [

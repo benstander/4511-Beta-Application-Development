@@ -6,19 +6,27 @@ import { useTheme } from '@/hooks/use-theme';
 
 type FormFieldProps = {
   label: string;
+  required?: boolean;
   labelAccessory?: ReactNode;
   children: ReactNode;
   style?: StyleProp<ViewStyle>;
 };
 
 // Label above a form input
-export function FormField({ label, labelAccessory, children, style }: FormFieldProps) {
+export function FormField({ label, required, labelAccessory, children, style }: FormFieldProps) {
   const theme = useTheme();
 
   return (
     <View style={[styles.field, style]}>
       <View style={styles.labelRow}>
-        <Text style={[styles.label, { color: theme.text }]}>{label}</Text>
+        <View style={styles.labelText}>
+          <Text style={[styles.label, { color: theme.text }]}>{label}</Text>
+          {required && (
+            <Text style={[styles.label, { color: theme.text }]} accessibilityLabel="required">
+              *
+            </Text>
+          )}
+        </View>
         {labelAccessory}
       </View>
       {children}
@@ -43,6 +51,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
+  },
+  labelText: {
+    flexDirection: 'row',
+    gap: 4,
   },
   label: {
     fontFamily: FontFamily.semiBold,

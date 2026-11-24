@@ -3,7 +3,7 @@ import { useSyncExternalStore } from 'react';
 
 import type { SessionLevel } from '@/constants/theme';
 import { CURRENT_USER, findPerson } from '@/data/people';
-import { SAMPLE_SESSIONS, SPORT_IMAGES } from '@/data/sessions';
+import { SAMPLE_SESSIONS } from '@/data/sessions';
 import type { Coordinates, Session, SessionType, Sport } from '@/types/session';
 
 // Sessions shared by every screen: SAMPLE_SESSIONS plus ones you made in Create.
@@ -94,7 +94,7 @@ function fromStored(stored: StoredSession): Session {
     sport: stored.sport,
     level: stored.level,
     type: stored.type,
-    image: stored.photoUri ? { uri: stored.photoUri } : SPORT_IMAGES[stored.sport],
+    image: stored.photoUri ? { uri: stored.photoUri } : undefined,
     startsAt: new Date(stored.startsAt),
     endsAt: new Date(stored.endsAt),
     location: stored.location,
