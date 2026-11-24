@@ -5,7 +5,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { ProfileSheet } from '@/components/profile/profile-sheet';
 import { Avatar } from '@/components/ui/avatar';
 import { FontFamily } from '@/constants/theme';
-import { CURRENT_USER } from '@/data/people';
+import { useCurrentUser } from '@/data/profile-store';
 import { useTheme } from '@/hooks/use-theme';
 import type { Person } from '@/types/session';
 
@@ -32,10 +32,18 @@ type PersonRowProps = {
 };
 
 // Tap the row to see their profile, tap the icon to invite or remove
-export function PersonRow({ person, status = 'going', onPress, actionLabel }: PersonRowProps) {
+export function PersonRow({
+  person: listed,
+  status = 'going',
+  onPress,
+  actionLabel,
+}: PersonRowProps) {
   const theme = useTheme();
+  const me = useCurrentUser();
   const [profileOpen, setProfileOpen] = useState(false);
-  const name = person.id === CURRENT_USER.id ? `${person.name} (you)` : person.name;
+  const isYou = listed.id === me.id;
+  const person = isYou ? me : listed;
+  const name = isYou ? `${person.name} (you)` : person.name;
 
   const statusIcon = (
     <Image source={STATUS_ICONS[status]} style={styles.icon} tintColor={theme.text} />

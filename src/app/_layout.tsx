@@ -11,6 +11,7 @@ import { useColorScheme } from 'react-native';
 
 import AppTabs from '@/components/layout/app-tabs';
 import { hydrateFriends } from '@/data/friends-store';
+import { hydrateProfile } from '@/data/profile-store';
 import { hydrateSessionStore, useSessionStoreReady } from '@/data/session-store';
 
 SplashScreen.preventAutoHideAsync();
@@ -28,6 +29,7 @@ export default function TabLayout() {
   useEffect(() => {
     hydrateSessionStore();
     hydrateFriends();
+    hydrateProfile();
   }, []);
 
   useEffect(() => {

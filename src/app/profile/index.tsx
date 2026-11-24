@@ -5,24 +5,32 @@ import { Page } from '@/components/layout/page';
 import { ProfileIdentity } from '@/components/profile/profile-identity';
 import { FontFamily } from '@/constants/theme';
 import { useFriends } from '@/data/friends-store';
-import { CURRENT_USER } from '@/data/people';
+import { useCurrentUser } from '@/data/profile-store';
 import { useTheme } from '@/hooks/use-theme';
 
-// Profile tab. Only Friends works for now
+// Profile tab
 export default function ProfileScreen() {
   const theme = useTheme();
   const friends = useFriends();
+  const me = useCurrentUser();
 
   return (
     <Page title="Profile">
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <ProfileIdentity person={CURRENT_USER} />
+        <ProfileIdentity person={me} />
 
         <View style={styles.cards}>
           <View style={styles.slot}>
-            <View style={[styles.card, { borderColor: theme.text }]}>
+            <Pressable
+              onPress={() => router.push('/profile/edit')}
+              role="button"
+              style={({ pressed }) => [
+                styles.card,
+                { borderColor: theme.text },
+                pressed && styles.pressed,
+              ]}>
               <Text style={[styles.cardText, { color: theme.text }]}>Edit profile</Text>
-            </View>
+            </Pressable>
           </View>
           <View style={styles.slot}>
             <Pressable
